@@ -30,6 +30,14 @@ results and package artifacts for each Windows run.
   on every sample page.
 - Reviewed the actual native interface and corrected theme inheritance and
   small-screen sizing discovered during that review.
+- Switched dark/light themes in the native window, opened the guided manual page
+  and verified that a key press is detected by the in-memory keyboard checker.
+- Opened the full-screen display helper, verified color cycling and exited with
+  Escape. This checks the helper's behavior, not physical display pixel quality.
+
+Windows GitHub Actions run [40549302331](https://github.com/Atiq-Softwares/laptop-inspector/actions/runs/40549302331)
+passed all 44 tests and verified the portable package on a clean Windows runner.
+Tagged releases run the full checks again against their exact source revision.
 
 The repository and release use **synthetic sample hardware data only** for report
 examples and documentation images.

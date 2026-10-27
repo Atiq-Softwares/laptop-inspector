@@ -39,6 +39,7 @@ public partial class App : Application
                 await Dispatcher.InvokeAsync(() => { }, DispatcherPriority.ApplicationIdle);
                 window.UpdateLayout();
                 window.VerifyViews();
+                await Dispatcher.InvokeAsync(() => window.UpdateLayout(), DispatcherPriority.ApplicationIdle);
                 if (!window.IsLoaded || window.ActualWidth < 900 || window.ActualHeight < 600) throw new InvalidOperationException("Startup layout failed.");
                 var visual = (FrameworkElement)window.Content;
                 var bitmap = new RenderTargetBitmap((int)visual.ActualWidth, (int)visual.ActualHeight, 96, 96, PixelFormats.Pbgra32);

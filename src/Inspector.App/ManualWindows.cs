@@ -19,7 +19,7 @@ public sealed class KeyboardWindow : Window
         var all = new[] { Key.Escape, Key.F1, Key.F2, Key.F3, Key.F4, Key.F5, Key.F6, Key.F7, Key.F8, Key.F9, Key.F10, Key.F11, Key.F12, Key.Oem3 }.Concat(Enumerable.Range((int)Key.D0, 10).Select(i => (Key)i)).Concat(Enumerable.Range((int)Key.A, 26).Select(i => (Key)i)).Concat(new[] { Key.OemMinus, Key.OemPlus, Key.Back, Key.Tab, Key.OemOpenBrackets, Key.OemCloseBrackets, Key.OemPipe, Key.OemSemicolon, Key.OemQuotes, Key.OemComma, Key.OemPeriod, Key.OemQuestion, Key.CapsLock, Key.Enter, Key.LeftShift, Key.RightShift, Key.LeftCtrl, Key.RightCtrl, Key.LeftAlt, Key.RightAlt, Key.Space, Key.Left, Key.Up, Key.Down, Key.Right, Key.Delete, Key.Insert, Key.Home, Key.End, Key.PageUp, Key.PageDown });
         foreach (var key in all.Distinct())
         {
-            var border = new Border { Child = new TextBlock { Text = key.ToString(), FontSize = 11, Foreground = Brushes.LightGray, HorizontalAlignment = HorizontalAlignment.Center }, Background = new SolidColorBrush(Color.FromRgb(32, 49, 73)), CornerRadius = new(5), Padding = new(9, 10, 9, 10), Margin = new(3), MinWidth = 42 };
+            var border = new Border { Child = new TextBlock { Text = KeyLabel(key), FontSize = 11, Foreground = Brushes.LightGray, HorizontalAlignment = HorizontalAlignment.Center }, Background = new SolidColorBrush(Color.FromRgb(32, 49, 73)), CornerRadius = new(5), Padding = new(9, 10, 9, 10), Margin = new(3), MinWidth = 42 };
             keyLabels[key] = border; keys.Children.Add(border);
         }
         root.Children.Add(keys);
@@ -35,6 +35,10 @@ public sealed class KeyboardWindow : Window
             args.Handled = true;
         };
     }
+    private static string KeyLabel(Key key) => key switch
+    {
+        Key.Oem3 => "` ~", Key.OemMinus => "- _", Key.OemPlus => "= +", Key.Back => "Backspace", Key.OemOpenBrackets => "[ {", Key.OemCloseBrackets => "] }", Key.OemPipe => "\\ |", Key.OemSemicolon => "; :", Key.OemQuotes => "' \"", Key.OemComma => ", <", Key.OemPeriod => ". >", Key.OemQuestion => "/ ?", Key.CapsLock => "Caps Lock", Key.Enter => "Enter", Key.PageUp => "Page Up", Key.PageDown => "Page Down", _ => key >= Key.D0 && key <= Key.D9 ? ((int)key - (int)Key.D0).ToString() : key.ToString()
+    };
 }
 
 public sealed class DisplayWindow : Window

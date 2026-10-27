@@ -41,4 +41,4 @@ jobs:
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          gh release create $env:GITHUB_REF_NAME artifacts/Atiq-Laptop-Inspector-v1.0-Windows-x64.zip artifacts/SHA256SUMS.txt artifacts/sample/* --verify-tag --title "Atiq Laptop Inspector $env:GITHUB_REF_NAME" --notes-file docs/RELEASE-NOTES.md
+          gh release create $env:GITHUB_REF_NAME artifacts/Atiq-Laptop-Inspector-v1.0-Windows-x64.zip artifacts/SHA256SUMS.txt artifacts/sample/Sample-Inspection-Report.pdf artifacts/sample/Sample-Inspection-Report.html artifacts/sample/Sample-Inspection-Report.json --verify-tag --title "Atiq Laptop Inspector $env:GITHUB_REF_NAME" --notes-file docs/RELEASE-NOTES.md
