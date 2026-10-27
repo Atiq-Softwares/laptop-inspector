@@ -67,7 +67,7 @@ public static class Branding
 
 public static class JsonDefaults
 {
-    public static readonly JsonSerializerOptions Options = new() { WriteIndented = true, Converters = { new JsonStringEnumConverter() } };
+    public static readonly JsonSerializerOptions Options = new() { WriteIndented = true, MaxDepth = 16, Converters = { new JsonStringEnumConverter(allowIntegerValues: false) } };
 }
 
 public static class ManualCatalog

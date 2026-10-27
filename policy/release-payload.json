@@ -1,0 +1,143 @@
+{
+  "schema": 1,
+  "product": "Atiq Laptop Inspector",
+  "executables": [
+    "Atiq-Laptop-Inspector.exe"
+  ],
+  "staticFiles": [
+    {
+      "path": "LICENSE",
+      "sha256": "96d57cc0a4fd960d2102aa295f86d4f75a4465ad1050fb0bada56a78b865da6f",
+      "mode": "text-lf"
+    },
+    {
+      "path": "THIRD-PARTY-NOTICES.txt",
+      "sha256": "b4817285a283119b2837632b6cd5704b0707fb871239e9a5c46a5666a62ede58",
+      "mode": "text-lf"
+    },
+    {
+      "path": "licenses/DOTNET-LICENSE.txt",
+      "sha256": "cfc21f5e8bd655ae997eec916138b707b1d290b83272c02a95c9f821b8c87310",
+      "mode": "text-lf"
+    },
+    {
+      "path": "licenses/DOTNET-THIRD-PARTY-NOTICES.txt",
+      "sha256": "66f1d4e44973185519bb4aa8a9718eb22fc7af2cc532e3ae9cfc4c127ee7fc54",
+      "mode": "text-lf"
+    },
+    {
+      "path": "licenses/Microsoft.Extensions.DependencyInjection-8.0.1-LICENSE.TXT",
+      "sha256": "cfc21f5e8bd655ae997eec916138b707b1d290b83272c02a95c9f821b8c87310",
+      "mode": "text-lf"
+    },
+    {
+      "path": "licenses/Microsoft.Extensions.DependencyInjection-8.0.1-THIRD-PARTY-NOTICES.TXT",
+      "sha256": "97c1a7b3da6a4c6ad516448719f45114b41a4d4c5aa300a944476e2e4f5da438",
+      "mode": "text-lf"
+    },
+    {
+      "path": "licenses/Microsoft.Extensions.DependencyInjection.Abstractions-8.0.2-LICENSE.TXT",
+      "sha256": "cfc21f5e8bd655ae997eec916138b707b1d290b83272c02a95c9f821b8c87310",
+      "mode": "text-lf"
+    },
+    {
+      "path": "licenses/Microsoft.Extensions.DependencyInjection.Abstractions-8.0.2-THIRD-PARTY-NOTICES.TXT",
+      "sha256": "97c1a7b3da6a4c6ad516448719f45114b41a4d4c5aa300a944476e2e4f5da438",
+      "mode": "text-lf"
+    },
+    {
+      "path": "licenses/Microsoft.Extensions.Logging-8.0.1-LICENSE.TXT",
+      "sha256": "cfc21f5e8bd655ae997eec916138b707b1d290b83272c02a95c9f821b8c87310",
+      "mode": "text-lf"
+    },
+    {
+      "path": "licenses/Microsoft.Extensions.Logging-8.0.1-THIRD-PARTY-NOTICES.TXT",
+      "sha256": "97c1a7b3da6a4c6ad516448719f45114b41a4d4c5aa300a944476e2e4f5da438",
+      "mode": "text-lf"
+    },
+    {
+      "path": "licenses/Microsoft.Extensions.Logging.Abstractions-8.0.2-LICENSE.TXT",
+      "sha256": "cfc21f5e8bd655ae997eec916138b707b1d290b83272c02a95c9f821b8c87310",
+      "mode": "text-lf"
+    },
+    {
+      "path": "licenses/Microsoft.Extensions.Logging.Abstractions-8.0.2-THIRD-PARTY-NOTICES.TXT",
+      "sha256": "97c1a7b3da6a4c6ad516448719f45114b41a4d4c5aa300a944476e2e4f5da438",
+      "mode": "text-lf"
+    },
+    {
+      "path": "licenses/Microsoft.Extensions.Options-8.0.2-LICENSE.TXT",
+      "sha256": "cfc21f5e8bd655ae997eec916138b707b1d290b83272c02a95c9f821b8c87310",
+      "mode": "text-lf"
+    },
+    {
+      "path": "licenses/Microsoft.Extensions.Options-8.0.2-THIRD-PARTY-NOTICES.TXT",
+      "sha256": "7238e7fd468427aa3fe45b1d0cee1c3e2d93ff96692820768521e9780225d473",
+      "mode": "text-lf"
+    },
+    {
+      "path": "licenses/Microsoft.Extensions.Primitives-8.0.0-LICENSE.TXT",
+      "sha256": "cfc21f5e8bd655ae997eec916138b707b1d290b83272c02a95c9f821b8c87310",
+      "mode": "text-lf"
+    },
+    {
+      "path": "licenses/Microsoft.Extensions.Primitives-8.0.0-THIRD-PARTY-NOTICES.TXT",
+      "sha256": "7238e7fd468427aa3fe45b1d0cee1c3e2d93ff96692820768521e9780225d473",
+      "mode": "text-lf"
+    },
+    {
+      "path": "licenses/PDFsharp-MIT.txt",
+      "sha256": "ebf6d465d526aa1708067ea87805c8ae4ffb244d8abdd1c8e753a11b6588fb13",
+      "mode": "text-lf"
+    },
+    {
+      "path": "licenses/System.Management-10.0.0-THIRD-PARTY-NOTICES.TXT",
+      "sha256": "66f1d4e44973185519bb4aa8a9718eb22fc7af2cc532e3ae9cfc4c127ee7fc54",
+      "mode": "text-lf"
+    },
+    {
+      "path": "licenses/WPF-THIRD-PARTY-NOTICES.txt",
+      "sha256": "d23dba2fee20c6b59d8f7088ee9ed372459c952a319b7ca90f3eec370cc76eb9",
+      "mode": "text-lf"
+    },
+    {
+      "path": "third-party/smartmontools/AUTHORS.txt",
+      "sha256": "f8cd642bf9fb460264ee221e5b2b58f4c0d6f1a038ac962693fd14b911a9bb98",
+      "mode": "bytes"
+    },
+    {
+      "path": "third-party/smartmontools/COPYING.txt",
+      "sha256": "189b1af95d661151e054cea10c91b3d754e4de4d3fecfb074c1fb29476f7167b",
+      "mode": "bytes"
+    },
+    {
+      "path": "third-party/smartmontools/drivedb.h",
+      "sha256": "dd39c6a520d38895da61923fe26fe7c9c5eb3f42325f2e4477a06ed7a61966d0",
+      "mode": "bytes"
+    },
+    {
+      "path": "third-party/smartmontools/INSTALL.txt",
+      "sha256": "0e63b1c83a035978e563251ed6e0ce93a88c5ff2666cef6fa9eab891408d4246",
+      "mode": "bytes"
+    },
+    {
+      "path": "third-party/smartmontools/README.txt",
+      "sha256": "49c814dbd71bba397b2c8a3c7d624b8cc6169b5c5e188a0977a25c8208d1ef9a",
+      "mode": "bytes"
+    },
+    {
+      "path": "third-party/smartmontools/smartctl.exe",
+      "sha256": "b5db94e5082c042be44994b7a4fa8f7b5c8e713b2ab1c9a560d8f7a7995ea27d",
+      "mode": "bytes"
+    },
+    {
+      "path": "third-party/smartmontools/smartmontools-7.5.tar.gz",
+      "sha256": "690b83ca331378da9ea0d9d61008c4b22dde391387b9bbad7f29387f2595f76e",
+      "mode": "bytes"
+    }
+  ],
+  "generatedFiles": [
+    "README.txt",
+    "PAYLOAD-SHA256.json"
+  ]
+}

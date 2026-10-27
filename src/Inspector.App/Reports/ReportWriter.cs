@@ -14,13 +14,15 @@ public static class ReportWriter
     public static void Write(Inspection original, string path, bool includeNotes = false)
     {
         var inspection = ExportPrivacy.Prepare(original, includeNotes);
-        switch (Path.GetExtension(path).ToLowerInvariant())
+        AtomicReportFile.Write(path, output =>
         {
-            case ".pdf": WritePdf(inspection, path, includeNotes); break;
-            case ".html": File.WriteAllText(path, Html(inspection, includeNotes), new UTF8Encoding(false)); break;
-            case ".json": File.WriteAllText(path, Json(inspection, includeNotes), new UTF8Encoding(false)); break;
-            default: throw new ArgumentException("Choose PDF, HTML or JSON.");
-        }
+            if (Path.GetExtension(path).Equals(".pdf", StringComparison.OrdinalIgnoreCase)) WritePdf(inspection, output, includeNotes);
+            else
+            {
+                var text = Path.GetExtension(path).Equals(".html", StringComparison.OrdinalIgnoreCase) ? Html(inspection, includeNotes) : Json(inspection, includeNotes);
+                output.Write(Encoding.UTF8.GetBytes(text));
+            }
+        });
     }
 
     public static string Json(Inspection source, bool includeNotes = false)
@@ -32,7 +34,7 @@ public static class ReportWriter
     {
         var i = ExportPrivacy.Prepare(original, includeNotes);
         static string E(string? text) => WebUtility.HtmlEncode(text ?? "");
-        var b = new StringBuilder("<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Atiq-Softwares | Laptop Inspection Report</title><style>");
+        var b = new StringBuilder("<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta http-equiv=\"Content-Security-Policy\" content=\"default-src 'none'; script-src 'none'; style-src 'unsafe-inline'; img-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Atiq-Softwares | Laptop Inspection Report</title><style>");
         b.Append("*{box-sizing:border-box}body{margin:0;background:#efede6;color:#18232b;font:14px/1.6 'Segoe UI',Arial,sans-serif}main{max-width:1020px;margin:36px auto;background:white;padding:48px;border-radius:2px}header{border-top:4px solid #d9ac5e;background:#18232b;color:white;padding:32px;margin:-48px -48px 32px}header .muted{color:#bec9ce}header .brand{color:#e5ba69}.brand{letter-spacing:3px;font-size:13px;font-weight:700;color:#996a22}h1{font-family:Bahnschrift,Segoe UI,Arial,sans-serif;font-size:40px;line-height:1.15;letter-spacing:-1px;max-width:650px}h2{font-size:23px;margin-top:36px}h3{font-size:17px;margin:0}.muted{color:#536579}.meta{border-block:1px solid #dce5ed;padding:14px 0}.summary{background:#f5f0e4;border-left:5px solid #996a22;padding:24px;margin:24px 0}.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.stat{flex:1;min-width:130px;background:#f5f3ed;padding:18px;border-radius:2px}.stat strong{font-size:26px;display:block}.badge{font-size:11px;letter-spacing:1px;font-weight:bold;border-radius:5px;padding:5px 9px;display:inline-block}.Good{background:#dff4e9;color:#12653d}.Caution{background:#fff0ce;color:#805100}.Critical{background:#fde3e3;color:#a32525}.NotVerified{background:#e8edf3;color:#43536a}section.component{margin-top:24px;border:1px solid #dce5ed;border-radius:2px;padding:22px}.sectionhead{display:flex;justify-content:space-between;gap:16px}.kicker{color:#996a22;text-transform:uppercase;font-size:11px;letter-spacing:1.5px}table{width:100%;border-collapse:collapse;margin:14px 0}th,td{text-align:left;vertical-align:top;padding:10px 8px;border-bottom:1px solid #e5ebf0;overflow-wrap:anywhere}th{font-size:11px;text-transform:uppercase;color:#536579}td:first-child{width:27%;font-weight:600}td small{display:block;color:#627187}.source{font-size:11px}.notice{border:1px solid #e7c27c;background:#fff8e9;padding:16px;border-radius:2px}li{margin:7px 0}footer{margin-top:40px;border-top:2px solid #996a22;padding-top:18px;font-size:12px;color:#536579}a{color:#996a22}p{overflow-wrap:anywhere}@page{size:A4;margin:16mm}@media print{body{background:white;font-size:10pt}main{padding:0;margin:0;border-radius:0;max-width:none}h1{font-size:28pt}h2,h3,.sectionhead{break-after:avoid}tr,.summary,.stat{break-inside:avoid}section.component{border-radius:0}a{text-decoration:none}footer{break-inside:avoid}header{margin:0;padding:20px;border-top-width:5px}} </style></head><body><main><header><div class=\"brand\">ATIQ-SOFTWARES</div><h1>LAPTOP INSPECTION REPORT</h1><p class=\"muted\">Hardware Diagnostics &amp; Condition Assessment</p></header>");
         if (i.IsSample) b.Append("<p class=\"notice\"><strong>SAMPLE REPORT - SYNTHETIC DATA.</strong> This is an illustration, not an inspection of a real laptop.</p>");
         b.Append($"<p class=\"meta\"><strong>{E(i.Manufacturer)} / {E(i.Model)}</strong><br>Started: {E(i.StartedAt.ToString("yyyy-MM-dd HH:mm:ss zzz", CultureInfo.InvariantCulture))}<br>Completed: {E(i.CompletedAt?.ToString("yyyy-MM-dd HH:mm:ss zzz", CultureInfo.InvariantCulture) ?? "Not completed")} | Application {E(i.ApplicationVersion)}</p>");
@@ -69,7 +71,7 @@ public static class ReportWriter
     }
     public static string Outcome(ManualOutcome value) => value switch { ManualOutcome.NotTested => "NOT TESTED", ManualOutcome.NotApplicable => "NOT APPLICABLE", _ => value.ToString().ToUpperInvariant() };
 
-    private static void WritePdf(Inspection i, string path, bool includeNotes)
+    private static void WritePdf(Inspection i, Stream output, bool includeNotes)
     {
         using var p = new PdfLayout(i.IsSample);
         p.Cover(i);
@@ -114,7 +116,7 @@ public static class ReportWriter
         p.Heading("Coverage & limitations"); foreach (var s in i.Limitations.Distinct()) p.Paragraph("- " + s, 9);
         p.Heading("Local-first privacy"); p.Paragraph(Branding.Privacy, 9);
         p.Paragraph("Original code: MIT license. Third-party license notices are distributed with the portable application.", 9, true);
-        p.Save(path);
+        p.Save(output);
     }
 }
 
@@ -150,7 +152,7 @@ internal sealed class PdfLayout : IDisposable
     }
     public void Ensure(double height) { if (y + height > Bottom) NewPage(); }
     public void Gap(double points) { y += points; }
-    public void Kicker(string text) { Ensure(32); foreach (var line in Wrap(text.ToUpperInvariant(), Font(8, true), Width)) { Text(line, Left, y, Font(8, true), teal); y += 12; } y += 4; }
+    public void Kicker(string text) { var lines=Wrap(text.ToUpperInvariant(),Font(8,true),Width);Ensure(lines.Count*12+4);foreach(var line in lines){Text(line,Left,y,Font(8,true),teal);y+=12;}y+=4; }
     public void Title(string title) { foreach (var s in title.Split('\n')) { Text(s, Left, y, Font(32, true), ink); y += 39; } y += 10; }
     public void Heading(string text) { Ensure(72); y += 9; foreach (var line in Wrap(text, Font(17, true), Width)) { Ensure(24); Text(line, Left, y, Font(17, true), ink); y += 23; } y += 5; }
     public void Paragraph(string text, double size = 10, bool muted = false)
@@ -166,13 +168,15 @@ internal sealed class PdfLayout : IDisposable
     }
     public void Callout(string text, Rating rating)
     {
-        var lines = Wrap(text, Font(10), Width - 32); double height = lines.Count * 15 + 26;
-        Ensure(height + 8);
-        graphics.DrawRectangle(new XSolidBrush(XColor.FromArgb(240, 246, 247)), Left, y, Width, height);
-        graphics.DrawRectangle(new XSolidBrush(StatusColor(rating)), Left, y, 4, height);
-        y += 13;
-        foreach (var line in lines) { Text(line, Left + 16, y, Font(10), ink); y += 15; }
-        y += 21;
+        var lines=Wrap(text,Font(10),Width-32);int offset=0;
+        while(offset<lines.Count)
+        {
+            Ensure(70);int available=Math.Max(1,(int)((Bottom-y-34)/15));int take=Math.Min(available,lines.Count-offset);double height=take*15+26;
+            graphics.DrawRectangle(new XSolidBrush(XColor.FromArgb(240,246,247)),Left,y,Width,height);
+            graphics.DrawRectangle(new XSolidBrush(StatusColor(rating)),Left,y,4,height);y+=13;
+            for(int n=0;n<take;n++){Text(lines[offset++],Left+16,y,Font(10),ink);y+=15;}
+            y+=21;if(offset<lines.Count)NewPage();
+        }
     }
     public void Stats(Inspection i)
     {
@@ -214,17 +218,24 @@ internal sealed class PdfLayout : IDisposable
     }
     public void Row(string label, string value, string evidence)
     {
-        var labels = Wrap(label, Font(9,true), 130);
-        var values = Wrap(value, Font(9), 185);
-        var sources = Wrap(evidence, Font(7), 163);
-        double height=Math.Max(Math.Max(labels.Count*12,values.Count*12),sources.Count*10)+16;
-        Ensure(height);
-        graphics.DrawLine(new XPen(XColor.FromArgb(218,222,220),.5),Left,y,Left+Width,y);
-        double ly=y+8,vy=ly,sy=ly;
-        foreach(var line in labels){Text(line,Left+3,ly,Font(9,true),ink);ly+=12;}
-        foreach(var line in values){Text(line,Left+145,vy,Font(9),ink);vy+=12;}
-        foreach(var line in sources){Text(line,Left+342,sy,Font(7),XColor.FromArgb(90,104,111));sy+=10;}
-        y+=height;
+        var labels=Wrap(label,Font(9,true),130);var values=Wrap(value,Font(9),185);var sources=Wrap(evidence,Font(7),163);
+        int l=0,v=0,s=0;
+        double total=Math.Max(Math.Max(labels.Count*12,values.Count*12),sources.Count*10)+16;
+        if(total<Bottom-68)Ensure(total);
+        while(l<labels.Count || v<values.Count || s<sources.Count)
+        {
+            Ensure(52);double available=Bottom-y-16;
+            int lc=Math.Min(labels.Count-l,Math.Max(1,(int)(available/12)));
+            int vc=Math.Min(values.Count-v,Math.Max(1,(int)(available/12)));
+            int sc=Math.Min(sources.Count-s,Math.Max(1,(int)(available/10)));
+            double height=Math.Max(Math.Max(lc*12,vc*12),sc*10)+16;
+            graphics.DrawLine(new XPen(XColor.FromArgb(218,222,220),.5),Left,y,Left+Width,y);
+            double ly=y+8,vy=ly,sy=ly;
+            for(int n=0;n<lc;n++){Text(labels[l++],Left+3,ly,Font(9,true),ink);ly+=12;}
+            for(int n=0;n<vc;n++){Text(values[v++],Left+145,vy,Font(9),ink);vy+=12;}
+            for(int n=0;n<sc;n++){Text(sources[s++],Left+342,sy,Font(7),XColor.FromArgb(90,104,111));sy+=10;}
+            y+=height;if(l<labels.Count || v<values.Count || s<sources.Count)NewPage();
+        }
     }
     private List<string> Wrap(string text, XFont font, double width)
     {
@@ -249,7 +260,7 @@ internal sealed class PdfLayout : IDisposable
     }
     private void Text(string value, double x, double top, XFont font, XColor color) => graphics.DrawString(value, font, new XSolidBrush(color), new XRect(x, top, 0, 0), XStringFormats.TopLeft);
     private static XColor StatusColor(Rating r) => r switch { Rating.Good => XColor.FromArgb(18, 101, 61), Rating.Caution => XColor.FromArgb(138, 88, 0), Rating.Critical => XColor.FromArgb(172, 37, 37), _ => XColor.FromArgb(67, 83, 106) };
-    public void Save(string path)
+    public void Save(Stream output)
     {
         graphics.Dispose(); graphics = null!;
         for (int n = 0; n < doc.PageCount; n++)
@@ -262,7 +273,7 @@ internal sealed class PdfLayout : IDisposable
             var rect = new PdfRectangle(new XPoint(Left, doc.Pages[n].Height.Point - 814), new XPoint(Left + 300, doc.Pages[n].Height.Point - 800));
             doc.Pages[n].AddWebLink(rect, Branding.GitHub);
         }
-        doc.Save(path);
+        doc.Save(output, closeStream: false);
     }
     public void Dispose() { graphics?.Dispose(); doc.Dispose(); }
 }

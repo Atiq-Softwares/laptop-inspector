@@ -13,31 +13,37 @@ public static class SmartEngine
     private static string Folder => Path.Combine(AppContext.BaseDirectory, "third-party", "smartmontools");
     public static bool Verify()
     {
-        try
-        {
-            foreach (var (file, hash) in new[] { ("smartctl.exe", "B5DB94E5082C042BE44994B7A4FA8F7B5C8E713B2AB1C9A560D8F7A7995EA27D"), ("drivedb.h", "DD39C6A520D38895DA61923FE26FE7C9C5EB3F42325F2E4477A06ED7A61966D0") })
-                using (var input = File.OpenRead(Path.Combine(Folder, file))) if (!Convert.ToHexString(SHA256.HashData(input)).Equals(hash, StringComparison.OrdinalIgnoreCase)) return false;
-            return true;
-        }
+        try { using var files = new VerifiedEngineFiles(Folder); return true; }
         catch (IOException) { return false; } catch (UnauthorizedAccessException) { return false; }
     }
     public static DriveFacts? Read(int index)
     {
-        if (index is < 0 or > 255 || !Verify()) return null;
-        var start = new ProcessStartInfo(Path.Combine(Folder, "smartctl.exe")) { WorkingDirectory = Folder, UseShellExecute = false, CreateNoWindow = true, RedirectStandardOutput = true, RedirectStandardError = true };
-        foreach (var arg in new[] { "-j", "-x", $"/dev/pd{index}" }) start.ArgumentList.Add(arg);
+        if (index is < 0 or > 255) return null;
         try
         {
-            using var process = Process.Start(start)!;
-            var output = process.StandardOutput.ReadToEndAsync(); var errors = process.StandardError.ReadToEndAsync();
-            if (!process.WaitForExit(12000)) { process.Kill(true); return null; }
-            var json = output.GetAwaiter().GetResult(); errors.GetAwaiter().GetResult();
-            if (json.Length > 2_000_000) return null;
-            var facts = DriveSmart.Parse(json);
-            // smartctl exit codes are a bitmask; nonzero health bits must not discard failing-drive data.
-            return facts.Model == null ? null : facts;
+            using var files = new VerifiedEngineFiles(Folder);
+            var start = new ProcessStartInfo(files.Executable) { WorkingDirectory = Folder, UseShellExecute = false, CreateNoWindow = true, RedirectStandardOutput = true, RedirectStandardError = true };
+            foreach (var arg in new[] { "-j", "-x", "-B", files.Database, $"/dev/pd{index}" }) start.ArgumentList.Add(arg);
+            using var process = Process.Start(start) ?? throw new IOException("Drive reader did not start.");
+            using var timeout = new CancellationTokenSource(TimeSpan.FromSeconds(12));
+            void Stop() { try { if (!process.HasExited) process.Kill(true); } catch (InvalidOperationException) { } catch (System.ComponentModel.Win32Exception) { } }
+            using var cancellation = timeout.Token.Register(Stop);
+            async Task<string> ReadOutput(StreamReader reader, int limit)
+            {
+                try { return await BoundedText.ReadAsync(reader,limit,timeout.Token).ConfigureAwait(false); }
+                catch { Stop(); throw; }
+            }
+            var output = ReadOutput(process.StandardOutput,2_000_000); var errors = ReadOutput(process.StandardError,65536);
+            try
+            {
+                process.WaitForExitAsync(timeout.Token).GetAwaiter().GetResult();
+                var json = output.GetAwaiter().GetResult(); errors.GetAwaiter().GetResult();
+                var facts = DriveSmart.Parse(json);
+                return facts.Model == null ? null : facts;
+            }
+            finally { Stop(); }
         }
-        catch (Exception e) when (e is IOException or JsonException or System.ComponentModel.Win32Exception or InvalidOperationException) { return null; }
+        catch (Exception e) when (e is IOException or JsonException or System.ComponentModel.Win32Exception or InvalidOperationException or UnauthorizedAccessException or OperationCanceledException) { return null; }
     }
     public static List<DriveProbe> Collect()
     {
@@ -49,29 +55,44 @@ public static class SmartEngine
     }
     public static bool Matches(Component component, DriveProbe probe)
     {
-        if (component.DiskIndex != probe.Index) return false;
+        if (component.DiskIndex != probe.Index || component.CapacityBytes < 0 || probe.Facts.Capacity < 0) return false;
         static string Normalize(string value) => string.Concat(value.Where(char.IsLetterOrDigit)).ToUpperInvariant();
         if (probe.Facts.Model == null || Normalize(component.Name) != Normalize(probe.Facts.Model)) return false;
-        return component.CapacityBytes == null || probe.Facts.Capacity == null || Math.Abs(component.CapacityBytes.Value - probe.Facts.Capacity.Value) < 1048576;
+        return component.CapacityBytes == null || probe.Facts.Capacity == null || Math.Abs((decimal)component.CapacityBytes.Value - probe.Facts.Capacity.Value) < 1048576;
     }
     public static async Task<List<DriveProbe>> ElevatedAsync(CancellationToken token, bool elevate = true)
     {
         var name = "AtiqInspector-" + Guid.NewGuid().ToString("N");
         using var pipe = new NamedPipeServerStream(name, PipeDirection.In, 1, PipeTransmissionMode.Byte, PipeOptions.Asynchronous | PipeOptions.CurrentUserOnly);
         var exe = Environment.ProcessPath ?? throw new IOException("Executable path unavailable.");
-        using var process = Process.Start(new ProcessStartInfo(exe) { UseShellExecute = elevate, Verb = elevate ? "runas" : "", CreateNoWindow = !elevate, Arguments = "--advanced-collect " + name });
+        var start = new ProcessStartInfo(exe) { UseShellExecute = elevate, Verb = elevate ? "runas" : "", CreateNoWindow = !elevate };
+        if(Path.GetFileNameWithoutExtension(exe).Equals("dotnet",StringComparison.OrdinalIgnoreCase))
+        {
+            if(elevate) throw new IOException("Use the portable executable for optional elevated access.");
+            start.ArgumentList.Add(Path.Combine(AppContext.BaseDirectory,"Atiq-Laptop-Inspector.dll"));
+        }
+        start.ArgumentList.Add("--advanced-collect");start.ArgumentList.Add(name);start.ArgumentList.Add(Environment.ProcessId.ToString(System.Globalization.CultureInfo.InvariantCulture));
+        using var process = Process.Start(start) ?? throw new IOException("Diagnostic helper did not start.");
         using var timeout = CancellationTokenSource.CreateLinkedTokenSource(token); timeout.CancelAfter(TimeSpan.FromMinutes(3));
-        await pipe.WaitForConnectionAsync(timeout.Token);
+        for(int attempts=0;;attempts++)
+        {
+            await pipe.WaitForConnectionAsync(timeout.Token);
+            if(PipePeer.ClientId(pipe)==process.Id)break;
+            pipe.Disconnect();if(attempts>=7)throw new IOException("Unexpected diagnostic peer.");
+        }
         using var reader = new StreamReader(pipe);
-        var json = await reader.ReadToEndAsync(timeout.Token);
-        if (json.Length > 4_000_000) throw new IOException("Unexpected diagnostic output size.");
-        return JsonSerializer.Deserialize<List<DriveProbe>>(json, JsonDefaults.Options) ?? [];
+        var json = await BoundedText.ReadAsync(reader,4_000_000,timeout.Token);
+        var results=JsonSerializer.Deserialize<List<DriveProbe>>(json,JsonDefaults.Options) ?? throw new IOException("No diagnostic response.");
+        if(results.Count>16 || results.Any(r=>r==null || r.Index is <0 or >255) || results.Select(r=>r.Index).Distinct().Count()!=results.Count)throw new IOException("Invalid drive response.");
+        foreach(var result in results)DriveSmart.Validate(result.Facts);
+        return results;
     }
-    public static async Task SendElevatedAsync(string name)
+    public static async Task SendElevatedAsync(string name, int expectedParent)
     {
-        if (!System.Text.RegularExpressions.Regex.IsMatch(name, "^AtiqInspector-[a-f0-9]{32}$")) throw new ArgumentException("Invalid diagnostic channel.");
-        using var pipe = new NamedPipeClientStream(".", name, PipeDirection.Out, PipeOptions.Asynchronous | PipeOptions.CurrentUserOnly);
+        if (expectedParent<=0 || !System.Text.RegularExpressions.Regex.IsMatch(name, "^AtiqInspector-[a-f0-9]{32}$",System.Text.RegularExpressions.RegexOptions.CultureInvariant,TimeSpan.FromMilliseconds(100))) throw new ArgumentException("Invalid diagnostic channel.");
+        using var pipe = new NamedPipeClientStream(".", name, PipeDirection.Out, PipeOptions.Asynchronous | PipeOptions.CurrentUserOnly, System.Security.Principal.TokenImpersonationLevel.Identification);
         await pipe.ConnectAsync(15000);
+        if(PipePeer.ServerId(pipe)!=expectedParent)throw new IOException("Unexpected diagnostic parent.");
         using var writer = new StreamWriter(pipe); await writer.WriteAsync("["); await writer.FlushAsync();
         bool first = true;
         foreach(var row in WmiReader.Query(@"root\cimv2","Win32_DiskDrive","Index").Rows.Take(16))
