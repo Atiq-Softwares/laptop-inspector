@@ -1,11 +1,13 @@
-param([string]$Version = '1.1', [string]$DotNet = 'dotnet', [switch]$SkipTests)
+#Requires -Version 7.4
+param([ValidateLength(3,48)][ValidatePattern('^[0-9]+\.[0-9]+(?:\.[0-9]+)?(?:-[A-Za-z0-9.-]+)?$')][string]$Version = '1.1.1', [string]$DotNet = 'dotnet', [switch]$SkipTests)
 $ErrorActionPreference = 'Stop'
 $env:DOTNET_CLI_TELEMETRY_OPTOUT = '1'
 $root = Split-Path -Parent $PSScriptRoot
 Push-Location $root
 try {
   function Invoke-DotNet { & $DotNet @args; if ($LASTEXITCODE -ne 0) { throw "dotnet failed with exit code $LASTEXITCODE" } }
-  if (-not $SkipTests) { Invoke-DotNet test LaptopInspector.slnx -c Release --logger 'trx;LogFileName=tests.trx' --results-directory artifacts/TestResults }
+  Invoke-DotNet restore LaptopInspector.slnx --locked-mode
+  if (-not $SkipTests) { Invoke-DotNet test LaptopInspector.slnx -c Release --no-restore --logger 'trx;LogFileName=tests.trx' --results-directory artifacts/TestResults }
   $stage = Join-Path $root 'artifacts/portable'
   if (Test-Path -LiteralPath $stage) {
     $resolved = (Resolve-Path -LiteralPath $stage).Path
@@ -13,7 +15,8 @@ try {
     if (-not $resolved.StartsWith($allowed, [StringComparison]::OrdinalIgnoreCase)) { throw 'Unsafe staging path' }
     Remove-Item -LiteralPath $resolved -Recurse -Force
   }
-  Invoke-DotNet publish src/Inspector.App/Inspector.App.csproj -c Release -r win-x64 --self-contained true -o $stage
+  Invoke-DotNet restore src/Inspector.App/Inspector.App.csproj --locked-mode -r win-x64 '-p:SelfContained=true'
+  Invoke-DotNet publish src/Inspector.App/Inspector.App.csproj -c Release -r win-x64 --self-contained true --no-restore -o $stage
   Copy-Item -LiteralPath LICENSE,THIRD-PARTY-NOTICES.txt -Destination $stage
   Copy-Item -LiteralPath docs/PORTABLE-README.txt -Destination (Join-Path $stage 'README.txt')
   New-Item -ItemType Directory -Force -Path (Join-Path $stage 'licenses') | Out-Null
@@ -39,6 +42,11 @@ try {
   foreach ($extension in @('pdf','html','json')) {
     if (-not (Test-Path -LiteralPath (Join-Path $sample "Sample-Inspection-Report.$extension"))) { throw "Missing $extension export" }
   }
+  & (Join-Path $PSScriptRoot 'Test-ReleasePayload.ps1') -Path $stage
+  $payload = @(Get-ChildItem -LiteralPath $stage -Recurse -File | Sort-Object FullName | ForEach-Object { @{ path = [IO.Path]::GetRelativePath($stage,$_.FullName).Replace('\','/'); sha256 = (Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash.ToLowerInvariant(); bytes = $_.Length } })
+  $signature = Get-AuthenticodeSignature -LiteralPath $exe
+  @{schema=1;product='Atiq Laptop Inspector';version=$Version;authenticodeStatus=$signature.Status.ToString();files=$payload} | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath (Join-Path $stage 'PAYLOAD-SHA256.json') -Encoding utf8NoBOM
+  & (Join-Path $PSScriptRoot 'Test-ReleasePayload.ps1') -Path $stage
   $zip = Join-Path $root "artifacts/Atiq-Laptop-Inspector-v$Version-Windows-x64.zip"
   Compress-Archive -Path "$stage/*" -DestinationPath $zip -Force
   # Validate the ZIP by extracting to a fresh directory and starting the extracted executable.
@@ -49,5 +57,6 @@ try {
   if ($process.ExitCode -ne 0) { throw 'Extracted application did not start' }
   $hash = (Get-FileHash -Algorithm SHA256 -LiteralPath $zip).Hash.ToLowerInvariant()
   "$hash  $([IO.Path]::GetFileName($zip))" | Set-Content -LiteralPath (Join-Path $root 'artifacts/SHA256SUMS.txt') -Encoding ascii
-  Write-Host "Portable package verified: $zip"
+  & (Join-Path $PSScriptRoot 'Verify-Release.ps1') -Archive $zip -ChecksumFile (Join-Path $root 'artifacts/SHA256SUMS.txt') -Executable (Join-Path $verify 'Atiq-Laptop-Inspector.exe')
+  Write-Host "Portable package verified locally; this script does not publish releases: $zip"
 } finally { Pop-Location }

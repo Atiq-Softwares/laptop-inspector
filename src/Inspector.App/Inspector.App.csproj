@@ -12,10 +12,9 @@
     <SelfContained>false</SelfContained>
     <RuntimeIdentifier>win-x64</RuntimeIdentifier>
     <PublishTrimmed>false</PublishTrimmed>
-    <DebugType>embedded</DebugType>
   </PropertyGroup>
   <ItemGroup>
-    <Content Include="..\..\third-party\smartmontools\**\*" Link="third-party\smartmontools\%(RecursiveDir)%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
+    <Content Include="..\..\third-party\smartmontools\smartctl.exe;..\..\third-party\smartmontools\drivedb.h;..\..\third-party\smartmontools\COPYING.txt;..\..\third-party\smartmontools\INSTALL.txt;..\..\third-party\smartmontools\README.txt;..\..\third-party\smartmontools\AUTHORS.txt;..\..\third-party\smartmontools\smartmontools-7.5.tar.gz" Link="third-party\smartmontools\%(Filename)%(Extension)" CopyToOutputDirectory="PreserveNewest" CopyToPublishDirectory="PreserveNewest" ExcludeFromSingleFile="true" />
     <ProjectReference Include="..\Inspector.Core\Inspector.Core.csproj" />
     <PackageReference Include="System.Management" Version="10.0.0" />
     <PackageReference Include="PDFsharp-WPF" Version="6.2.3" />

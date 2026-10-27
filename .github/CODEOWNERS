@@ -1,0 +1,13 @@
+# Configure a second trusted maintainer before requiring independent approval.
+/.github/ @Atiq-Softwares
+/scripts/ @Atiq-Softwares
+/policy/ @Atiq-Softwares
+/NuGet.Config @Atiq-Softwares
+/global.json @Atiq-Softwares
+/Directory.Build.props @Atiq-Softwares
+/**/Inspector.App.csproj @Atiq-Softwares
+/**/packages.lock.json @Atiq-Softwares
+/LICENSE @Atiq-Softwares
+/THIRD-PARTY-NOTICES.txt @Atiq-Softwares
+/licenses/ @Atiq-Softwares
+/third-party/ @Atiq-Softwares

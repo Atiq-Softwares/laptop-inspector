@@ -5,18 +5,31 @@ namespace Inspector.Core;
 public sealed record DriveFacts(string? Model, string? Firmware, long? Capacity, string? Protocol, double? Hours, double? Cycles, double? Temperature, double? WearUsed, double? Spare, double? ReadBytes, double? WrittenBytes, double? MediaErrors, double? UnsafeShutdowns, bool? Passed, List<Measurement> Attributes);
 public static class DriveSmart
 {
+    public static void Validate(DriveFacts? f)
+    {
+        if(f==null || f.Capacity<0 || f.Attributes==null || f.Attributes.Count>64)throw new JsonException("Invalid drive response.");
+        static void Text(string? value,int maximum){if(value!=null && (value.Length>maximum || value.Any(char.IsControl)))throw new JsonException("Invalid drive text.");}
+        Text(f.Model,512);Text(f.Firmware,512);Text(f.Protocol,64);
+        foreach(var n in new[]{f.Hours,f.Cycles,f.Temperature,f.WearUsed,f.Spare,f.ReadBytes,f.WrittenBytes,f.MediaErrors,f.UnsafeShutdowns})
+            if(n is double value && (!double.IsFinite(value) || value<0))throw new JsonException("Invalid drive counter.");
+        foreach(var a in f.Attributes){if(a==null || a.Evidence!=Evidence.Measured)throw new JsonException("Invalid drive attribute.");Text(a.Name,512);Text(a.Value,2048);Text(a.Source,1024);}
+    }
     public static DriveFacts Parse(string json)
     {
-        using var doc = JsonDocument.Parse(json); var root = doc.RootElement;
+        if(json.Length>2_000_000)throw new JsonException("Drive response is too large.");
+        using var doc = JsonDocument.Parse(json,new JsonDocumentOptions{MaxDepth=16}); var root = doc.RootElement;
+        if(root.ValueKind!=JsonValueKind.Object)throw new JsonException("Drive response must be an object.");
         JsonElement At(params string[] path) { var node = root; foreach (var key in path) { if (node.ValueKind != JsonValueKind.Object || !node.TryGetProperty(key, out node)) return default; } return node; }
         double? N(params string[] path) { var node = At(path); return node.ValueKind == JsonValueKind.Number && node.TryGetDouble(out var n) && double.IsFinite(n) && n >= 0 ? n : null; }
-        string? S(params string[] path) { var node = At(path); return node.ValueKind == JsonValueKind.String ? node.GetString() : null; }
+        string? S(params string[] path) { var node = At(path); var value=node.ValueKind==JsonValueKind.String?node.GetString():null; return string.IsNullOrWhiteSpace(value)?null:value; }
         bool? passed = At("smart_status", "passed").ValueKind switch { JsonValueKind.True => true, JsonValueKind.False => false, _ => null };
         var attrs = new List<Measurement>();
         var table = At("ata_smart_attributes", "table");
+        if(table.ValueKind==JsonValueKind.Array && table.GetArrayLength()>64)throw new JsonException("Too many drive attributes.");
         if (table.ValueKind == JsonValueKind.Array)
             foreach (var a in table.EnumerateArray())
             {
+                if(a.ValueKind!=JsonValueKind.Object)throw new JsonException("Invalid drive attribute.");
                 string name = a.TryGetProperty("name", out var nm) ? nm.GetString() ?? "ATA attribute" : "ATA attribute";
                 string id = a.TryGetProperty("id", out var ident) ? ident.ToString() : "?";
                 string raw = a.TryGetProperty("raw", out var r) && r.TryGetProperty("string", out var str) ? str.GetString() ?? "Not available" : "Not available";
@@ -24,11 +37,13 @@ public static class DriveSmart
                 string threshold = a.TryGetProperty("thresh", out var t) ? t.ToString() : "unknown";
                 attrs.Add(new($"ATA {id} / {name}", $"{raw} | normalized {normalized}; threshold {threshold}", Evidence.Measured, "smartctl / drive database interpretation; raw semantics remain vendor-dependent"));
             }
-        var capacity = N("user_capacity", "bytes");
-        return new(S("model_name") ?? S("scsi_model_name"), S("firmware_version"), capacity is >= 0 and <= long.MaxValue ? (long)capacity.Value : null, S("device", "protocol"), N("power_on_time", "hours") ?? N("nvme_smart_health_information_log", "power_on_hours"), N("power_cycle_count") ?? N("nvme_smart_health_information_log", "power_cycles"), N("temperature", "current"), N("endurance_used", "current_percent") ?? N("nvme_smart_health_information_log", "percentage_used"), N("spare_available", "current_percent") ?? N("nvme_smart_health_information_log", "available_spare"), N("nvme_smart_health_information_log", "data_units_read") * 512000, N("nvme_smart_health_information_log", "data_units_written") * 512000, N("nvme_smart_health_information_log", "media_errors"), N("nvme_smart_health_information_log", "unsafe_shutdowns"), passed, attrs);
+        var capacityNode=At("user_capacity","bytes");long? capacity=capacityNode.ValueKind==JsonValueKind.Number && capacityNode.TryGetInt64(out var bytes) && bytes>=0 ? bytes:null;
+        var facts = new DriveFacts(S("model_name") ?? S("scsi_model_name"), S("firmware_version"), capacity, S("device", "protocol"), N("power_on_time", "hours") ?? N("nvme_smart_health_information_log", "power_on_hours"), N("power_cycle_count") ?? N("nvme_smart_health_information_log", "power_cycles"), N("temperature", "current"), N("endurance_used", "current_percent") ?? N("nvme_smart_health_information_log", "percentage_used"), N("spare_available", "current_percent") ?? N("nvme_smart_health_information_log", "available_spare"), N("nvme_smart_health_information_log", "data_units_read") * 512000, N("nvme_smart_health_information_log", "data_units_written") * 512000, N("nvme_smart_health_information_log", "media_errors"), N("nvme_smart_health_information_log", "unsafe_shutdowns"), passed, attrs);
+        Validate(facts);return facts;
     }
     public static void Apply(Component c, DriveFacts f)
     {
+        Validate(f);
         const string source = "smartctl 7.5 / read-only drive SMART log";
         void Set(string name, object? value, Evidence evidence = Evidence.Measured)
         {

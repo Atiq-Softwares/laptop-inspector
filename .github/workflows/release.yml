@@ -1,45 +1,53 @@
-name: Windows build, test and release
+name: Windows security validation
 on:
   push:
-    branches: [main]
-    tags: ['v*']
+    branches: [main, 'security/**']
   pull_request:
   workflow_dispatch:
+# Validation only; publication requires a separately approved release.
 permissions:
   contents: read
+concurrency:
+  group: validation-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   windows:
-    runs-on: windows-latest
+    runs-on: windows-2025
     timeout-minutes: 25
-    permissions:
-      contents: write
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
-          dotnet-version: '10.0.x'
-      - name: Build, test, publish and verify extracted ZIP
+          persist-credentials: false
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          global-json-file: global.json
+      - name: Restore locked dependencies
+        shell: pwsh
+        run: dotnet restore LaptopInspector.slnx --locked-mode
+      - name: Check known dependency advisories
+        shell: pwsh
+        run: |
+          dotnet list LaptopInspector.slnx package --vulnerable --include-transitive --format json > dependency-audit.json
+          if ($LASTEXITCODE -ne 0) { throw 'Dependency audit failed' }
+          $audit = Get-Content dependency-audit.json -Raw | ConvertFrom-Json
+          if ($audit.problems.Count) { throw 'Advisory service did not complete cleanly' }
+          foreach ($project in $audit.projects) {
+            foreach ($framework in $project.frameworks) {
+              foreach ($package in @($framework.topLevelPackages) + @($framework.transitivePackages)) {
+                if ($package.vulnerabilities.Count) { throw "Known advisory requires review: $($package.id)" }
+              }
+            }
+          }
+      - name: Build, test, inspect payload and verify portable startup
         shell: pwsh
         run: ./scripts/package.ps1
-      - name: Save test results
+      - name: Save test evidence only
         if: always()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: automated-test-results
-          path: artifacts/TestResults
-      - name: Save portable package and sample reports
-        uses: actions/upload-artifact@v4
-        with:
-          name: Atiq-Laptop-Inspector-Windows-x64
-          path: |
-            artifacts/Atiq-Laptop-Inspector-*.zip
-            artifacts/SHA256SUMS.txt
-            artifacts/sample/*
-      - name: Publish tagged release
-        if: startsWith(github.ref, 'refs/tags/')
-        shell: pwsh
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          $version = $env:GITHUB_REF_NAME.TrimStart('v')
-          gh release create $env:GITHUB_REF_NAME "artifacts/Atiq-Laptop-Inspector-v$version-Windows-x64.zip" artifacts/SHA256SUMS.txt artifacts/sample/Sample-Inspection-Report.pdf artifacts/sample/Sample-Inspection-Report.html artifacts/sample/Sample-Inspection-Report.json --verify-tag --title "Atiq Laptop Inspector $env:GITHUB_REF_NAME" --notes-file docs/RELEASE-NOTES.md
+          path: artifacts/TestResults/*.trx
+          retention-days: 7
+          if-no-files-found: warn
+# Do not add contents:write, signing credentials, tag publishing or privileged
+# workflow_run follow-ups. The approved private publisher is a separate boundary.

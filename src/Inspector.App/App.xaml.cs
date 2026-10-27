@@ -20,7 +20,8 @@ public partial class App : Application
         {
             if (e.Args.Contains("--engine-check")) { Shutdown(SmartEngine.Verify() ? 0 : 1); return; }
             if (e.Args.Contains("--pipe-self-test")) { await SmartEngine.ElevatedAsync(CancellationToken.None, false); Shutdown(0); return; }
-            if (e.Args.Length == 2 && e.Args[0] == "--advanced-collect") { await SmartEngine.SendElevatedAsync(e.Args[1]); Shutdown(0); return; }
+            if (e.Args.Length == 3 && e.Args[0] == "--advanced-collect" && int.TryParse(e.Args[2], out var parent) && parent > 0) { await SmartEngine.SendElevatedAsync(e.Args[1], parent); Shutdown(0); return; }
+            if(e.Args.Contains("--advanced-collect"))throw new ArgumentException("Invalid diagnostic invocation.");
             if (e.Args.Contains("--collect"))
             {
                 var report = new HardwareCollector().Collect((p, stage) => { Console.Error.WriteLine($"{p}|{stage}"); Console.Error.Flush(); });

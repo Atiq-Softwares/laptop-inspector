@@ -5,3 +5,14 @@ artifacts/
 TestResults/
 *.user
 *.zip
+*.pfx
+*.p12
+*.snk
+*.key
+*.pem
+*.publishsettings
+.env
+.env.*
+!**/.env.example
+**/obfuscation-maps/
+**/signing-private/

@@ -38,7 +38,7 @@ public sealed class ManualCheck
 public sealed class Inspection
 {
     public string SchemaVersion { get; set; } = "1.0";
-    public string ApplicationVersion { get; set; } = "1.1.0";
+    public string ApplicationVersion { get; set; } = "1.1.1";
     public string Publisher { get; set; } = Branding.Publisher;
     public string Copyright { get; set; } = Branding.Copyright;
     public string GitHub { get; set; } = Branding.GitHub;
@@ -67,7 +67,7 @@ public static class Branding
 
 public static class JsonDefaults
 {
-    public static readonly JsonSerializerOptions Options = new() { WriteIndented = true, Converters = { new JsonStringEnumConverter() } };
+    public static readonly JsonSerializerOptions Options = new() { WriteIndented = true, MaxDepth = 16, Converters = { new JsonStringEnumConverter(allowIntegerValues: false) } };
 }
 
 public static class ManualCatalog

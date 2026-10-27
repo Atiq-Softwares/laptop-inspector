@@ -199,7 +199,7 @@ public partial class MainWindow : Window
     }
     private void About()
     {
-        PageContent.Children.Add(Kicker("ATIQ-SOFTWARES")); PageContent.Children.Add(Heading("Laptop Inspector", 34)); PageContent.Children.Add(Body("Version 1.1.0 / Portable Windows x64 / .NET 10 LTS", true));
+        PageContent.Children.Add(Kicker("ATIQ-SOFTWARES")); PageContent.Children.Add(Heading("Laptop Inspector", 34)); PageContent.Children.Add(Body("Version 1.1.1 / Portable Windows x64 / .NET 10 LTS", true));
         var stack = new StackPanel(); stack.Children.Add(Heading("Local inspection engine", 22));
         stack.Children.Add(Body("A local, read-only hardware inventory and condition assessment for Windows 10 and 11. Basic use does not require an administrator account or internet connection. No accounts, telemetry, automatic uploads or hidden system changes."));
         stack.Children.Add(Body("Temperature, battery and SMART support depend on firmware, drivers and Windows permissions. The application uses documented Windows providers and does not install kernel drivers. No stress tests are run automatically."));
