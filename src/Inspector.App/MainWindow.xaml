@@ -32,7 +32,7 @@
         <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><StackPanel><TextBlock x:Name="ProgressText" Text="Preparing inspection…" FontSize="12" Margin="0,0,0,8"/><ProgressBar x:Name="ScanProgress" Height="5" Maximum="100"/></StackPanel><Button Grid.Column="1" Content="Cancel scan" Click="Cancel_Click" Margin="20,0,0,0" Padding="12,5"/></Grid>
       </Border>
       <ScrollViewer x:Name="PageScroll" Grid.Row="2" Padding="32,26,32,32"><StackPanel x:Name="PageContent"/></ScrollViewer>
-      <Border Grid.Row="3" BorderBrush="{DynamicResource Line}" BorderThickness="0,1,0,0" Padding="32,0"><DockPanel><TextBlock Text="Developed by Atiq-Softwares" FontSize="10" Foreground="{DynamicResource Muted}" VerticalAlignment="Center"/><TextBlock x:Name="FooterState" Text="v1.1.0  ·  Ready for inspection" FontSize="10" Foreground="{DynamicResource Muted}" HorizontalAlignment="Right" VerticalAlignment="Center"/></DockPanel></Border>
+      <Border Grid.Row="3" BorderBrush="{DynamicResource Line}" BorderThickness="0,1,0,0" Padding="32,0"><DockPanel><TextBlock Text="Developed by Atiq-Softwares" FontSize="10" Foreground="{DynamicResource Muted}" VerticalAlignment="Center"/><TextBlock x:Name="FooterState" Text="v1.1.1  ·  Ready for inspection" FontSize="10" Foreground="{DynamicResource Muted}" HorizontalAlignment="Right" VerticalAlignment="Center"/></DockPanel></Border>
     </Grid>
   </Grid>
 </Window>

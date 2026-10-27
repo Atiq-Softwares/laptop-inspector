@@ -4,7 +4,7 @@ on:
     branches: [main, 'security/**']
   pull_request:
   workflow_dispatch:
-# No publication until the owner approves licensing and migration.
+# Validation only; publication requires a separately approved release.
 permissions:
   contents: read
 concurrency:

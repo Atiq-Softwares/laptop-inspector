@@ -1,5 +1,25 @@
 # Validation record
 
+## v1.1.1 security update
+
+The current Release suite has **87 passing test cases**, including 23 new security
+cases for streaming limits, invalid/deep SMART JSON, malformed models, overflow,
+HTML escaping/CSP, transactional exports, hard-link replacement, native-tool
+integrity/locking and absence of embedded debug symbols.
+
+The final portable package is tested again before publication: engine integrity,
+same-user helper transport, WPF views/themes, synthetic PDF/HTML/JSON generation,
+ZIP extraction/startup, payload allowlist and SHA-256 verification. The Windows
+Actions job validates the source with read-only permissions and retains test
+results only. It never publishes on tags. Local Windows 11 x64 real inspection
+and SMART read paths were verified; raw hardware reports stay private.
+
+Windows 10, broader hardware and an actual UAC approval remain unqualified. A
+same-user helper self-test does not test elevation. No online activation or
+licence server was added. The release remains unsigned.
+
+The records below describe earlier baseline validation.
+
 ## Automated checks / v1.1
 
 New cases validate SMBIOS populated/empty/unknown devices, truncated tables, extended size/speed fields, part-number extraction without serial export, configured versus rated MT/s, estimated MHz, independent charge percentage, partial ATA identity, NVMe unit conversion, absent counters and private drive-index filtering.
@@ -19,7 +39,7 @@ The release test suite contains **64 passing test cases** covering:
 The packaging script additionally verifies WPF startup, all main views, both
 themes, synthetic PDF/HTML/JSON generation and startup of the EXE extracted from
 the actual release ZIP. Failures stop packaging. GitHub Actions retains TRX test
-results and package artifacts for each Windows run.
+results only for each Windows run in the current workflow.
 
 ## Local validation performed
 
@@ -39,7 +59,7 @@ results and package artifacts for each Windows run.
 
 Windows GitHub Actions run [40549302331](https://github.com/Atiq-Softwares/laptop-inspector/actions/runs/40549302331)
 passed all 44 tests and verified the portable package on a clean Windows runner.
-Tagged releases run the full checks again against their exact source revision.
+Current releases require explicit publication after source and final-package checks.
 
 The repository and release use **synthetic sample hardware data only** for report
 examples and documentation images.
@@ -54,7 +74,7 @@ ARM64/32-bit builds have not been physically qualified. See LIMITATIONS.md.
 
 For reproducible Windows runner results, see the repository's **Actions** tab.
 The workflow builds from the checked-out source, runs the tests, generates reports
-and validates the ZIP before publishing a tagged release.
+and validates the ZIP. Publication is a separate explicitly approved step.
 
 Copyright © 2026 Atiq-Softwares. Developed by Atiq-Softwares.
 

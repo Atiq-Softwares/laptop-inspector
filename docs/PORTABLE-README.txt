@@ -1,4 +1,4 @@
-ATIQ-SOFTWARES / LAPTOP INSPECTOR 1.1
+ATIQ-SOFTWARES / LAPTOP INSPECTOR 1.1.1
 
 1. Extract the entire ZIP to a normal local folder.
 2. Double-click Atiq-Laptop-Inspector.exe.

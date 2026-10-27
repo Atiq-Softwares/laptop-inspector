@@ -2,7 +2,7 @@
 <h1 align="center">Atiq Laptop Inspector</h1>
 <p align="center">Portable Windows hardware inspection and evidence-based reports.</p>
 <p align="center">
-  <a href="https://github.com/Atiq-Softwares/laptop-inspector/releases/latest/download/Atiq-Laptop-Inspector-v1.1-Windows-x64.zip"><img alt="Download portable Windows x64 ZIP" src="https://img.shields.io/badge/DOWNLOAD-Windows_x64_ZIP-996a22?style=for-the-badge&logo=windows" /></a>
+  <a href="https://github.com/Atiq-Softwares/laptop-inspector/releases/latest/download/Atiq-Laptop-Inspector-v1.1.1-Windows-x64.zip"><img alt="Download portable Windows x64 ZIP" src="https://img.shields.io/badge/DOWNLOAD-Windows_x64_ZIP-996a22?style=for-the-badge&logo=windows" /></a>
   <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/License-MIT-16283c?style=for-the-badge" /></a>
 </p>
 
@@ -17,7 +17,21 @@ reports. Developed and published by **Atiq-Softwares**.
 > This screenshot and the downloadable sample reports contain clearly labelled
 > synthetic data. They are not measurements from a real laptop.
 
-## What changed in v1.1
+## Security update v1.1.1
+
+This patch hardens diagnostic input and the optional SMART helper, writes reports
+transactionally, adds a restrictive HTML content policy, and checks an explicit
+release payload with locked dependencies. SHA-256 verification tools distinguish
+integrity checks from publisher signatures. The application remains **unsigned**,
+portable and offline, under the existing MIT license. Required third-party
+notices and the GPL SMART-tool source remain included.
+
+The release has 87 automated tests. Local Windows 11 x64 inspection, SMART reads,
+portable startup and all three report formats passed. Windows 10 and a real UAC
+approval remain device-qualification items; no all-model compatibility guarantee
+is made. [Validation record](docs/TESTING.md) · [Release security](docs/RELEASE-SECURITY.md)
+
+## Interface and hardware coverage introduced in v1.1
 
 The interface uses an inspection-desk layout with a warm paper surface, graphite navigation and restrained brass accents. Device figures replace the earlier marketing-style overview. Battery and individual memory slots are visible together, followed by the drive register; the full hardware page can be filtered by category or searched by field/value.
 
@@ -125,20 +139,21 @@ and the licenses folder with the EXE when redistributing the package.
 Physical hardware compatibility varies by firmware, drivers, Windows permissions,
 virtualization and USB/RAID bridges. Unsupported diagnostics remain explicitly
 unavailable. An optional advanced-drive retry explains and requests Windows permission when standard SMART access is restricted. 32-bit and native ARM64 releases are not
-provided in v1.1. Use a Windows release receiving appropriate security updates.
+provided in v1.1.1. Use a Windows release receiving appropriate security updates.
 
 ## Verify your download
 
-The release includes **SHA256SUMS.txt**. Compare the ZIP with a trusted local
+The release includes **SHA256SUMS.txt** and a per-file payload manifest. A matching
+checksum alone does not authenticate the publisher. The executable is unsigned. Compare the ZIP with a trusted local
 SHA-256 tool. Optional PowerShell verification for technical users:
 
 ```powershell
-Get-FileHash .\Atiq-Laptop-Inspector-v1.1-Windows-x64.zip -Algorithm SHA256
+Get-FileHash .\Atiq-Laptop-Inspector-v1.1.1-Windows-x64.zip -Algorithm SHA256
 ```
 
 ## Build and test from source
 
-Developers need Windows, Git and the **.NET 10 SDK**. Normal app users need none
+Developers need Windows, Git, **PowerShell 7.4+** for packaging and the **.NET 10 SDK** pinned by global.json. Normal app users need none
 of these tools.
 
 ```powershell
@@ -152,9 +167,10 @@ Packaging runs automated tests, publishes a self-contained single-file EXE,
 checks real WPF startup, generates sample PDF/HTML/JSON, builds a ZIP, extracts
 it to a fresh folder, checks the extracted EXE and writes SHA256SUMS.txt.
 
-The [Windows GitHub Actions workflow](.github/workflows/release.yml) runs for main,
-pull requests and tags. Version tags publish release assets. Test TRX and portable
-packages are available as workflow artifacts. [Validation details](docs/TESTING.md)
+The [Windows GitHub Actions workflow](.github/workflows/release.yml) validates main,
+security branches and pull requests using read-only permissions. It uploads test
+results only and never publishes releases automatically. Releases require an
+explicit approved publication; no tag-triggered publisher is enabled. [Validation details](docs/TESTING.md)
 distinguish automated checks from unperformed physical laptop qualification.
 
 ## Source layout

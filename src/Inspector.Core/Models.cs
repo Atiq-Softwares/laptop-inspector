@@ -38,7 +38,7 @@ public sealed class ManualCheck
 public sealed class Inspection
 {
     public string SchemaVersion { get; set; } = "1.0";
-    public string ApplicationVersion { get; set; } = "1.1.0";
+    public string ApplicationVersion { get; set; } = "1.1.1";
     public string Publisher { get; set; } = Branding.Publisher;
     public string Copyright { get; set; } = Branding.Copyright;
     public string GitHub { get; set; } = Branding.GitHub;

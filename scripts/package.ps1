@@ -1,5 +1,5 @@
 #Requires -Version 7.4
-param([ValidateLength(3,48)][ValidatePattern('^[0-9]+\.[0-9]+(?:\.[0-9]+)?(?:-[A-Za-z0-9.-]+)?$')][string]$Version = '1.1', [string]$DotNet = 'dotnet', [switch]$SkipTests)
+param([ValidateLength(3,48)][ValidatePattern('^[0-9]+\.[0-9]+(?:\.[0-9]+)?(?:-[A-Za-z0-9.-]+)?$')][string]$Version = '1.1.1', [string]$DotNet = 'dotnet', [switch]$SkipTests)
 $ErrorActionPreference = 'Stop'
 $env:DOTNET_CLI_TELEMETRY_OPTOUT = '1'
 $root = Split-Path -Parent $PSScriptRoot

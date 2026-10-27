@@ -1,4 +1,4 @@
-Atiq Laptop Inspector 1.1.0
+Atiq Laptop Inspector 1.1.1
 Copyright © 2026 Atiq-Softwares.
 Developed by Atiq-Softwares
 GitHub: https://github.com/Atiq-Softwares

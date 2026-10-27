@@ -16,7 +16,7 @@
     <RuntimeIdentifiers>win-x64</RuntimeIdentifiers>
     <NuGetAudit>true</NuGetAudit>
     <NuGetAuditMode>all</NuGetAuditMode>
-    <Version>1.1.0</Version>
+    <Version>1.1.1</Version>
     <Authors>Atiq-Softwares</Authors>
     <Company>Atiq-Softwares</Company>
     <Copyright>Copyright © 2026 Atiq-Softwares.</Copyright>
