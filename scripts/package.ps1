@@ -1,0 +1,47 @@
+param([string]$Version = '1.0', [string]$DotNet = 'dotnet', [switch]$SkipTests)
+$ErrorActionPreference = 'Stop'
+$env:DOTNET_CLI_TELEMETRY_OPTOUT = '1'
+$root = Split-Path -Parent $PSScriptRoot
+Push-Location $root
+try {
+  function Invoke-DotNet { & $DotNet @args; if ($LASTEXITCODE -ne 0) { throw "dotnet failed with exit code $LASTEXITCODE" } }
+  if (-not $SkipTests) { Invoke-DotNet test LaptopInspector.slnx -c Release --logger 'trx;LogFileName=tests.trx' --results-directory artifacts/TestResults }
+  $stage = Join-Path $root 'artifacts/portable'
+  if (Test-Path -LiteralPath $stage) {
+    $resolved = (Resolve-Path -LiteralPath $stage).Path
+    $allowed = [IO.Path]::GetFullPath((Join-Path $root 'artifacts')) + [IO.Path]::DirectorySeparatorChar
+    if (-not $resolved.StartsWith($allowed, [StringComparison]::OrdinalIgnoreCase)) { throw 'Unsafe staging path' }
+    Remove-Item -LiteralPath $resolved -Recurse -Force
+  }
+  Invoke-DotNet publish src/Inspector.App/Inspector.App.csproj -c Release -r win-x64 --self-contained true -o $stage
+  Copy-Item -LiteralPath LICENSE,THIRD-PARTY-NOTICES.txt -Destination $stage
+  Copy-Item -LiteralPath docs/PORTABLE-README.txt -Destination (Join-Path $stage 'README.txt')
+  New-Item -ItemType Directory -Force -Path (Join-Path $stage 'licenses') | Out-Null
+  Copy-Item -Path 'licenses/*' -Destination (Join-Path $stage 'licenses')
+  $exe = Join-Path $stage 'Atiq-Laptop-Inspector.exe'
+  $process = Start-Process -FilePath $exe -ArgumentList '--smoke-test' -WindowStyle Hidden -PassThru
+  if (-not $process.WaitForExit(60000)) { $process.Kill(); throw 'Packaged startup timed out' }
+  if ($process.ExitCode -ne 0) { throw "Packaged startup failed: $($process.ExitCode)" }
+  $process = Start-Process -FilePath $exe -ArgumentList @('--demo','--smoke-test') -WindowStyle Hidden -PassThru
+  if (-not $process.WaitForExit(60000)) { $process.Kill(); throw 'Sample view smoke test timed out' }
+  if ($process.ExitCode -ne 0) { throw 'Sample views or theme switching failed' }
+  $sample = Join-Path $root 'artifacts/sample'
+  New-Item -ItemType Directory -Force -Path $sample | Out-Null
+  $process = Start-Process -FilePath $exe -ArgumentList @('--sample-report', ('"' + $sample + '"')) -WindowStyle Hidden -PassThru
+  if (-not $process.WaitForExit(60000)) { $process.Kill(); throw 'Sample report generation timed out' }
+  if ($process.ExitCode -ne 0) { throw "Sample report generation failed: $($process.ExitCode)" }
+  foreach ($extension in @('pdf','html','json')) {
+    if (-not (Test-Path -LiteralPath (Join-Path $sample "Sample-Inspection-Report.$extension"))) { throw "Missing $extension export" }
+  }
+  $zip = Join-Path $root "artifacts/Atiq-Laptop-Inspector-v$Version-Windows-x64.zip"
+  Compress-Archive -Path "$stage/*" -DestinationPath $zip -Force
+  # Validate the ZIP by extracting to a fresh directory and starting the extracted executable.
+  $verify = Join-Path $root ('artifacts/verify-' + [guid]::NewGuid().ToString('N'))
+  Expand-Archive -LiteralPath $zip -DestinationPath $verify
+  $process = Start-Process -FilePath (Join-Path $verify 'Atiq-Laptop-Inspector.exe') -ArgumentList '--smoke-test' -WindowStyle Hidden -PassThru
+  if (-not $process.WaitForExit(60000)) { $process.Kill(); throw 'Extracted startup timed out' }
+  if ($process.ExitCode -ne 0) { throw 'Extracted application did not start' }
+  $hash = (Get-FileHash -Algorithm SHA256 -LiteralPath $zip).Hash.ToLowerInvariant()
+  "$hash  $([IO.Path]::GetFileName($zip))" | Set-Content -LiteralPath (Join-Path $root 'artifacts/SHA256SUMS.txt') -Encoding ascii
+  Write-Host "Portable package verified: $zip"
+} finally { Pop-Location }

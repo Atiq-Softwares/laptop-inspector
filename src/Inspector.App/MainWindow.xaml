@@ -1,0 +1,38 @@
+<Window x:Class="Inspector.App.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" Title="Atiq Laptop Inspector" Style="{StaticResource {x:Type Window}}" Width="1280" Height="860" MinWidth="1000" MinHeight="700" WindowStartupLocation="CenterScreen">
+  <Grid>
+    <Grid.ColumnDefinitions><ColumnDefinition Width="224"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+    <Border Background="#0A1423" Padding="22,20,18,16">
+      <DockPanel LastChildFill="True">
+        <StackPanel DockPanel.Dock="Top">
+          <Border Width="38" Height="38" Background="#133F42" CornerRadius="10" HorizontalAlignment="Left" Margin="0,0,0,12"><Viewbox Margin="8"><Canvas Width="28" Height="28"><Rectangle Width="26" Height="19" Stroke="#55D6BE" StrokeThickness="2" RadiusX="3" RadiusY="3" Canvas.Top="1"/><Path Data="M 4,12 L 9,12 12,6 16,16 19,10 24,10" Stroke="#55D6BE" StrokeThickness="2"/><Path Data="M 7,25 L 21,25 M 14,20 L 14,25" Stroke="#55D6BE" StrokeThickness="2"/></Canvas></Viewbox></Border>
+          <TextBlock Text="ATIQ-SOFTWARES" FontSize="13" FontWeight="Bold" Foreground="#55D6BE"/>
+          <TextBlock Text="Laptop Inspector" FontSize="20" FontWeight="SemiBold" Foreground="#F1F5F9" Margin="0,5,0,4"/>
+          <TextBlock Text="Hardware clarity. Local privacy." FontSize="11" Foreground="#8D9DB2" Margin="0,0,0,22"/>
+          <TextBlock Text="WORKSPACE" Foreground="#708298" FontSize="10" FontWeight="Bold" Margin="6,0,0,12"/>
+          <StackPanel x:Name="Navigation"/>
+        </StackPanel>
+        <StackPanel DockPanel.Dock="Bottom">
+          <Border Background="#132437" CornerRadius="8" Padding="12" Margin="0,18,0,20"><StackPanel><TextBlock Text="●  LOCAL &amp; OFFLINE" Foreground="#55D6BE" FontWeight="Bold" FontSize="10"/><TextBlock Text="Your hardware data stays&#10;on this computer." Foreground="#A1B2C7" FontSize="11" Margin="0,7,0,0"/></StackPanel></Border>
+          <Button Content="GitHub ↗" Click="GitHub_Click" Background="Transparent" Foreground="#B7C8DC" BorderBrush="#26384D" Padding="9" HorizontalContentAlignment="Left"/>
+          <TextBlock Text="Copyright © 2026&#10;Atiq-Softwares." FontSize="10" Foreground="#708298" Margin="2,14,0,0"/>
+        </StackPanel>
+        <Border/>
+      </DockPanel>
+    </Border>
+    <Grid Grid.Column="1">
+      <Grid.RowDefinitions><RowDefinition Height="82"/><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="36"/></Grid.RowDefinitions>
+      <Border BorderBrush="{DynamicResource Line}" BorderThickness="0,0,0,1" Padding="32,0">
+        <DockPanel LastChildFill="False">
+          <StackPanel VerticalAlignment="Center" DockPanel.Dock="Left"><TextBlock Text="DEVICE WORKSPACE" Foreground="{DynamicResource Muted}" FontSize="10" FontWeight="SemiBold"/><TextBlock x:Name="PageTitle" Text="Inspection overview" FontSize="20" FontWeight="SemiBold" Margin="0,3,0,0"/></StackPanel>
+          <Button DockPanel.Dock="Right" x:Name="ThemeButton" Content="Light theme" Click="Theme_Click" Padding="12,8" VerticalAlignment="Center" Margin="16,0,0,0"/>
+          <TextBlock DockPanel.Dock="Right" Text="●  Offline ready" Foreground="{DynamicResource Accent}" VerticalAlignment="Center" FontSize="12"/>
+        </DockPanel>
+      </Border>
+      <Border x:Name="ProgressArea" Grid.Row="1" Background="{DynamicResource Surface}" Padding="32,14" Visibility="Collapsed">
+        <Grid><Grid.ColumnDefinitions><ColumnDefinition/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions><StackPanel><TextBlock x:Name="ProgressText" Text="Preparing inspection…" FontSize="12" Margin="0,0,0,8"/><ProgressBar x:Name="ScanProgress" Height="5" Maximum="100"/></StackPanel><Button Grid.Column="1" Content="Cancel scan" Click="Cancel_Click" Margin="20,0,0,0" Padding="12,5"/></Grid>
+      </Border>
+      <ScrollViewer x:Name="PageScroll" Grid.Row="2" Padding="32,26,32,32"><StackPanel x:Name="PageContent"/></ScrollViewer>
+      <Border Grid.Row="3" BorderBrush="{DynamicResource Line}" BorderThickness="0,1,0,0" Padding="32,0"><DockPanel><TextBlock Text="Developed by Atiq-Softwares" FontSize="10" Foreground="{DynamicResource Muted}" VerticalAlignment="Center"/><TextBlock x:Name="FooterState" Text="v1.0.0  ·  Ready for inspection" FontSize="10" Foreground="{DynamicResource Muted}" HorizontalAlignment="Right" VerticalAlignment="Center"/></DockPanel></Border>
+    </Grid>
+  </Grid>
+</Window>

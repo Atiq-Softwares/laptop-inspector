@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/Inspector.App/Inspector.App.csproj" />
+    <Project Path="src/Inspector.Core/Inspector.Core.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/Inspector.Tests/Inspector.Tests.csproj" />
+  </Folder>
+</Solution>

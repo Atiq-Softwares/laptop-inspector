@@ -1,0 +1,12 @@
+<Project>
+  <PropertyGroup>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <LangVersion>latest</LangVersion>
+    <Deterministic>true</Deterministic>
+    <Version>1.0.0</Version>
+    <Authors>Atiq-Softwares</Authors>
+    <Company>Atiq-Softwares</Company>
+    <Copyright>Copyright © 2026 Atiq-Softwares.</Copyright>
+  </PropertyGroup>
+</Project>

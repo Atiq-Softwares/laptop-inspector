@@ -1,0 +1,35 @@
+Atiq Laptop Inspector 1.0.0
+Copyright © 2026 Atiq-Softwares.
+Developed by Atiq-Softwares
+GitHub: https://github.com/Atiq-Softwares
+
+The original application code is MIT licensed. Third-party components retain
+their respective copyrights and license terms. These credits are legal notices,
+not application publisher branding.
+
+PDFsharp-WPF 6.2.3 - MIT
+Copyright (c) 2001-2025 empira Software GmbH, Troisdorf (Cologne Area), Germany.
+https://github.com/empira/PDFsharp/tree/v6.2.3
+See licenses/PDFsharp-MIT.txt for the exact upstream license.
+The application intentionally pins the MIT-licensed 6.2.3 release.
+
+System.Management 10.0.0 and Microsoft.Extensions.* 8.x - MIT
+Copyright (c) .NET Foundation and Contributors.
+https://github.com/dotnet/runtime
+See licenses/ for the supplied Microsoft MIT license and upstream notices.
+
+Self-contained Microsoft .NET 10 runtime and WPF runtime - MIT and third-party
+components with their respective notices.
+https://github.com/dotnet/runtime
+https://github.com/dotnet/wpf
+See licenses/DOTNET-LICENSE.txt, DOTNET-THIRD-PARTY-NOTICES.txt and
+WPF-THIRD-PARTY-NOTICES.txt.
+
+Segoe UI is a Windows-provided font. No standalone font files are distributed.
+PDF output embeds font subsets using the Windows font and PDFsharp's font support.
+
+Development-only components (not shipped as app dependencies):
+xUnit.net 2.9.3 - Apache-2.0.
+xunit.runner.visualstudio 3.0.2 - Apache-2.0.
+Microsoft.NET.Test.Sdk 17.14.1 - MIT.
+Microsoft.NET.ILLink.Tasks - MIT; build tooling only.

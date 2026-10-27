@@ -1,0 +1,44 @@
+name: Windows build, test and release
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 25
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '10.0.x'
+      - name: Build, test, publish and verify extracted ZIP
+        shell: pwsh
+        run: ./scripts/package.ps1
+      - name: Save test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: automated-test-results
+          path: artifacts/TestResults
+      - name: Save portable package and sample reports
+        uses: actions/upload-artifact@v4
+        with:
+          name: Atiq-Laptop-Inspector-Windows-x64
+          path: |
+            artifacts/Atiq-Laptop-Inspector-*.zip
+            artifacts/SHA256SUMS.txt
+            artifacts/sample/*
+      - name: Publish tagged release
+        if: startsWith(github.ref, 'refs/tags/')
+        shell: pwsh
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh release create $env:GITHUB_REF_NAME artifacts/Atiq-Laptop-Inspector-v1.0-Windows-x64.zip artifacts/SHA256SUMS.txt artifacts/sample/* --verify-tag --title "Atiq Laptop Inspector $env:GITHUB_REF_NAME" --notes-file docs/RELEASE-NOTES.md
