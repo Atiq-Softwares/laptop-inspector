@@ -18,6 +18,9 @@ public partial class App : Application
         DispatcherUnhandledException += (_, args) => { MessageBox.Show("The operation could not complete. No system settings were changed. Restart the application and try again.", "Atiq Laptop Inspector", MessageBoxButton.OK, MessageBoxImage.Error); args.Handled = true; };
         try
         {
+            if (e.Args.Contains("--engine-check")) { Shutdown(SmartEngine.Verify() ? 0 : 1); return; }
+            if (e.Args.Contains("--pipe-self-test")) { await SmartEngine.ElevatedAsync(CancellationToken.None, false); Shutdown(0); return; }
+            if (e.Args.Length == 2 && e.Args[0] == "--advanced-collect") { await SmartEngine.SendElevatedAsync(e.Args[1]); Shutdown(0); return; }
             if (e.Args.Contains("--collect"))
             {
                 var report = new HardwareCollector().Collect((p, stage) => { Console.Error.WriteLine($"{p}|{stage}"); Console.Error.Flush(); });

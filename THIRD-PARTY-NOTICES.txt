@@ -1,4 +1,4 @@
-Atiq Laptop Inspector 1.0.0
+Atiq Laptop Inspector 1.1.0
 Copyright © 2026 Atiq-Softwares.
 Developed by Atiq-Softwares
 GitHub: https://github.com/Atiq-Softwares
@@ -33,3 +33,12 @@ xUnit.net 2.9.3 - Apache-2.0.
 xunit.runner.visualstudio 3.0.2 - Apache-2.0.
 Microsoft.NET.Test.Sdk 17.14.1 - MIT.
 Microsoft.NET.ILLink.Tasks - MIT; build tooling only.
+
+smartmontools / smartctl 7.5 - GPL-2.0-or-later
+Copyright (C) 2002-2025, Bruce Allen, Christian Franke and contributors.
+https://github.com/smartmontools/smartmontools/releases/tag/RELEASE_7_5
+This unmodified separate executable is invoked for read-only SMART output.
+See third-party/smartmontools/COPYING.txt for the exact upstream terms,
+INSTALL.txt for build instructions and smartmontools-7.5.tar.gz for corresponding
+source. drivedb.h is the unmodified upstream drive database. smartd, services,
+installers and update scripts are not shipped or installed by this application.

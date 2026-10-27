@@ -10,7 +10,7 @@ public static class ExportPrivacy
     public static Inspection Prepare(Inspection source, bool includeManualNotes = false)
     {
         var copy = JsonSerializer.Deserialize<Inspection>(JsonSerializer.Serialize(source, JsonDefaults.Options), JsonDefaults.Options)!;
-        foreach (var c in copy.Components) c.Measurements.RemoveAll(m => SensitiveLabel.IsMatch(m.Name));
+        foreach (var c in copy.Components) { c.DiskIndex = null; c.Measurements.RemoveAll(m => SensitiveLabel.IsMatch(m.Name)); }
         if (!includeManualNotes) foreach (var check in copy.ManualChecks) check.Notes = "";
         copy.Publisher = Branding.Publisher; copy.Copyright = Branding.Copyright; copy.GitHub = Branding.GitHub;
         return copy;

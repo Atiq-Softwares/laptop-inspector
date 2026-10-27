@@ -1,4 +1,4 @@
-param([string]$Version = '1.0', [string]$DotNet = 'dotnet', [switch]$SkipTests)
+param([string]$Version = '1.1', [string]$DotNet = 'dotnet', [switch]$SkipTests)
 $ErrorActionPreference = 'Stop'
 $env:DOTNET_CLI_TELEMETRY_OPTOUT = '1'
 $root = Split-Path -Parent $PSScriptRoot
@@ -19,6 +19,12 @@ try {
   New-Item -ItemType Directory -Force -Path (Join-Path $stage 'licenses') | Out-Null
   Copy-Item -Path 'licenses/*' -Destination (Join-Path $stage 'licenses')
   $exe = Join-Path $stage 'Atiq-Laptop-Inspector.exe'
+  $process = Start-Process -FilePath $exe -ArgumentList '--engine-check' -WindowStyle Hidden -PassThru
+  if (-not $process.WaitForExit(60000)) { $process.Kill(); throw 'Drive engine integrity check timed out' }
+  if ($process.ExitCode -ne 0) { throw 'Bundled SMART engine or drive database is missing or has changed' }
+  $process = Start-Process -FilePath $exe -ArgumentList '--pipe-self-test' -WindowStyle Hidden -PassThru
+  if (-not $process.WaitForExit(60000)) { $process.Kill(); throw 'Same-user diagnostic channel check timed out' }
+  if ($process.ExitCode -ne 0) { throw 'The one-shot drive diagnostic channel failed' }
   $process = Start-Process -FilePath $exe -ArgumentList '--smoke-test' -WindowStyle Hidden -PassThru
   if (-not $process.WaitForExit(60000)) { $process.Kill(); throw 'Packaged startup timed out' }
   if ($process.ExitCode -ne 0) { throw "Packaged startup failed: $($process.ExitCode)" }

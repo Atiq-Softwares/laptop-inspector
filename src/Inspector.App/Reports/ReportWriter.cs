@@ -33,12 +33,18 @@ public static class ReportWriter
         var i = ExportPrivacy.Prepare(original, includeNotes);
         static string E(string? text) => WebUtility.HtmlEncode(text ?? "");
         var b = new StringBuilder("<!doctype html><html lang=\"en\"><head><meta charset=\"utf-8\"><meta name=\"viewport\" content=\"width=device-width,initial-scale=1\"><title>Atiq-Softwares | Laptop Inspection Report</title><style>");
-        b.Append("*{box-sizing:border-box}body{margin:0;background:#eaf0f5;color:#16283c;font:14px/1.6 'Segoe UI',Arial,sans-serif}main{max-width:1020px;margin:36px auto;background:white;padding:48px;border-radius:16px}header{border-top:8px solid #087f79;padding-top:24px}.brand{letter-spacing:3px;font-size:13px;font-weight:700;color:#087f79}h1{font-size:36px;line-height:1.15;letter-spacing:-1px;max-width:650px}h2{font-size:23px;margin-top:36px}h3{font-size:17px;margin:0}.muted{color:#536579}.meta{border-block:1px solid #dce5ed;padding:14px 0}.summary{background:#ecf7f5;border-left:5px solid #087f79;padding:24px;margin:24px 0}.cards{display:flex;gap:12px;flex-wrap:wrap}.stat{flex:1;min-width:130px;background:#f2f5f9;padding:18px;border-radius:10px}.stat strong{font-size:26px;display:block}.badge{font-size:11px;letter-spacing:1px;font-weight:bold;border-radius:5px;padding:5px 9px;display:inline-block}.Good{background:#dff4e9;color:#12653d}.Caution{background:#fff0ce;color:#805100}.Critical{background:#fde3e3;color:#a32525}.NotVerified{background:#e8edf3;color:#43536a}section.component{margin-top:24px;border:1px solid #dce5ed;border-radius:10px;padding:22px}.sectionhead{display:flex;justify-content:space-between;gap:16px}.kicker{color:#087f79;text-transform:uppercase;font-size:11px;letter-spacing:1.5px}table{width:100%;border-collapse:collapse;margin:14px 0}th,td{text-align:left;vertical-align:top;padding:10px 8px;border-bottom:1px solid #e5ebf0;overflow-wrap:anywhere}th{font-size:11px;text-transform:uppercase;color:#536579}td:first-child{width:27%;font-weight:600}td small{display:block;color:#627187}.source{font-size:11px}.notice{border:1px solid #e7c27c;background:#fff8e9;padding:16px;border-radius:8px}li{margin:7px 0}footer{margin-top:40px;border-top:2px solid #087f79;padding-top:18px;font-size:12px;color:#536579}a{color:#087f79}p{overflow-wrap:anywhere}@page{size:A4;margin:16mm}@media print{body{background:white;font-size:10pt}main{padding:0;margin:0;border-radius:0;max-width:none}h1{font-size:28pt}h2,h3,.sectionhead{break-after:avoid}tr,.summary,.stat{break-inside:avoid}section.component{border-radius:0}a{text-decoration:none}footer{break-inside:avoid}header{border-top-width:5px}} </style></head><body><main><header><div class=\"brand\">ATIQ-SOFTWARES</div><h1>LAPTOP INSPECTION REPORT</h1><p class=\"muted\">Hardware Diagnostics &amp; Condition Assessment</p></header>");
+        b.Append("*{box-sizing:border-box}body{margin:0;background:#efede6;color:#18232b;font:14px/1.6 'Segoe UI',Arial,sans-serif}main{max-width:1020px;margin:36px auto;background:white;padding:48px;border-radius:2px}header{border-top:4px solid #d9ac5e;background:#18232b;color:white;padding:32px;margin:-48px -48px 32px}header .muted{color:#bec9ce}header .brand{color:#e5ba69}.brand{letter-spacing:3px;font-size:13px;font-weight:700;color:#996a22}h1{font-family:Bahnschrift,Segoe UI,Arial,sans-serif;font-size:40px;line-height:1.15;letter-spacing:-1px;max-width:650px}h2{font-size:23px;margin-top:36px}h3{font-size:17px;margin:0}.muted{color:#536579}.meta{border-block:1px solid #dce5ed;padding:14px 0}.summary{background:#f5f0e4;border-left:5px solid #996a22;padding:24px;margin:24px 0}.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}.stat{flex:1;min-width:130px;background:#f5f3ed;padding:18px;border-radius:2px}.stat strong{font-size:26px;display:block}.badge{font-size:11px;letter-spacing:1px;font-weight:bold;border-radius:5px;padding:5px 9px;display:inline-block}.Good{background:#dff4e9;color:#12653d}.Caution{background:#fff0ce;color:#805100}.Critical{background:#fde3e3;color:#a32525}.NotVerified{background:#e8edf3;color:#43536a}section.component{margin-top:24px;border:1px solid #dce5ed;border-radius:2px;padding:22px}.sectionhead{display:flex;justify-content:space-between;gap:16px}.kicker{color:#996a22;text-transform:uppercase;font-size:11px;letter-spacing:1.5px}table{width:100%;border-collapse:collapse;margin:14px 0}th,td{text-align:left;vertical-align:top;padding:10px 8px;border-bottom:1px solid #e5ebf0;overflow-wrap:anywhere}th{font-size:11px;text-transform:uppercase;color:#536579}td:first-child{width:27%;font-weight:600}td small{display:block;color:#627187}.source{font-size:11px}.notice{border:1px solid #e7c27c;background:#fff8e9;padding:16px;border-radius:2px}li{margin:7px 0}footer{margin-top:40px;border-top:2px solid #996a22;padding-top:18px;font-size:12px;color:#536579}a{color:#996a22}p{overflow-wrap:anywhere}@page{size:A4;margin:16mm}@media print{body{background:white;font-size:10pt}main{padding:0;margin:0;border-radius:0;max-width:none}h1{font-size:28pt}h2,h3,.sectionhead{break-after:avoid}tr,.summary,.stat{break-inside:avoid}section.component{border-radius:0}a{text-decoration:none}footer{break-inside:avoid}header{margin:0;padding:20px;border-top-width:5px}} </style></head><body><main><header><div class=\"brand\">ATIQ-SOFTWARES</div><h1>LAPTOP INSPECTION REPORT</h1><p class=\"muted\">Hardware Diagnostics &amp; Condition Assessment</p></header>");
         if (i.IsSample) b.Append("<p class=\"notice\"><strong>SAMPLE REPORT - SYNTHETIC DATA.</strong> This is an illustration, not an inspection of a real laptop.</p>");
         b.Append($"<p class=\"meta\"><strong>{E(i.Manufacturer)} / {E(i.Model)}</strong><br>Started: {E(i.StartedAt.ToString("yyyy-MM-dd HH:mm:ss zzz", CultureInfo.InvariantCulture))}<br>Completed: {E(i.CompletedAt?.ToString("yyyy-MM-dd HH:mm:ss zzz", CultureInfo.InvariantCulture) ?? "Not completed")} | Application {E(i.ApplicationVersion)}</p>");
         b.Append($"<h2>Executive summary</h2><div class=\"summary\"><span class=\"badge {i.Overall}\">{Evaluation.Label(i.Overall)}</span><p>{E(i.Assessment)}</p><p class=\"muted\">{E(Branding.Disclaimer)}</p></div><div class=\"cards\">");
-        foreach (var rating in Enum.GetValues<Rating>()) b.Append($"<div class=\"stat\"><strong>{i.Components.Count(c => c.Rating == rating)}</strong>{Evaluation.Label(rating)} components</div>");
-        b.Append("</div><h2>Hardware findings</h2><p class=\"muted\">Measured = Windows/firmware reported; estimated = calculated or heuristic; unavailable = not verified. Specifications alone do not prove functional health.</p>");
+        foreach(var c in i.Components.Where(c=>c.Category is "Processor" or "Memory" or "Storage" or "Battery"))
+        {
+            b.Append($"<div class=\"stat\"><div class=\"kicker\">{E(c.Category)}</div><h3>{E(c.Name)}</h3><table>");
+            string[] keys=c.Category switch{"Processor"=>["Physical cores","Logical processors","Maximum reported clock"],"Memory"=>["Installed capacity","Populated memory devices","Empty memory devices"],"Battery"=>["Design capacity","Full-charge capacity","Current remaining capacity","Current charge","Capacity retention","Condition"],_=>["Capacity","Power-on hours","Wear used","SMART overall result"]};
+            foreach(var key in keys){var m=c.Measurements.FirstOrDefault(m=>m.Name==key);if(m!=null)b.Append($"<tr><td>{E(key)}</td><td>{E(m.Value)}</td></tr>");}
+            b.Append("</table></div>");
+        }
+        b.Append("</div><h2>Hardware register</h2><p class=\"muted\">Measured = Windows/firmware/drive reported; estimated = calculated or heuristic; unavailable = not verified. Specifications alone do not prove functional health.</p>");
         foreach (var c in i.Components)
         {
             b.Append($"<section class=\"component\"><div class=\"sectionhead\"><div><div class=\"kicker\">{E(c.Category)}</div><h3>{E(c.Name)}</h3></div><div><span class=\"badge {c.Rating}\">{Evaluation.Label(c.Rating)}</span></div></div><p>{E(c.Explanation)}</p><table><thead><tr><th>Measurement</th><th>Result &amp; evidence</th></tr></thead><tbody>");
@@ -66,35 +72,34 @@ public static class ReportWriter
     private static void WritePdf(Inspection i, string path, bool includeNotes)
     {
         using var p = new PdfLayout(i.IsSample);
-        p.Kicker("ATIQ-SOFTWARES / INSPECTION SERVICES");
-        p.Title("LAPTOP INSPECTION\nREPORT");
-        p.Paragraph("Hardware Diagnostics & Condition Assessment", 12, true);
-        if (i.IsSample) p.Callout("SAMPLE REPORT - SYNTHETIC DATA. For illustration only; not an inspection of a real laptop.", Rating.Caution);
-        p.Heading(i.Manufacturer + " / " + i.Model);
-        p.Paragraph("Started: " + i.StartedAt.ToString("yyyy-MM-dd HH:mm:ss zzz", CultureInfo.InvariantCulture), 9);
-        p.Paragraph("Completed: " + (i.CompletedAt?.ToString("yyyy-MM-dd HH:mm:ss zzz", CultureInfo.InvariantCulture) ?? "Not completed") + " | App " + i.ApplicationVersion, 9);
-        p.Heading("Executive summary"); p.Callout(Evaluation.Label(i.Overall) + " | " + i.Assessment, i.Overall);
-        p.Stats(i);
-        p.Paragraph(Branding.Disclaimer, 10, true);
-        p.Heading("Read the evidence");
-        p.Paragraph("MEASURED: Windows/firmware-reported values. ESTIMATED: calculations or clearly labelled heuristics. UNAVAILABLE: not verified. MANUAL: an operator-entered result. Detected specifications alone do not establish functional health.");
-        p.Heading("Inspection scope");
-        p.Paragraph("Processor, memory, storage, battery, display and graphics, motherboard and BIOS, Windows and security, networking and available thermal information. Guided manual tests cover the functions software inventory cannot verify.");
-        p.NewPage(); p.Heading("Hardware findings");
+        p.Cover(i);
+        p.Heading("Inspection summary");
+        p.Callout(Evaluation.Label(i.Overall) + " / " + i.Assessment, i.Overall);
+        foreach(var c in i.Components.Where(c=>c.Category is "Processor" or "Memory" or "Battery" or "Storage"))
+        {
+            string[] keys = c.Category switch { "Processor" => ["Physical cores","Logical processors","Maximum reported clock"], "Memory" => ["Installed capacity","Populated memory devices","Empty memory devices"], "Battery" => ["Design capacity","Full-charge capacity","Capacity retention","Current charge","Condition"], _ => ["Capacity","Power-on hours","Wear used","SMART overall result"] };
+            p.Ensure(70);p.Kicker(c.Category+" / "+c.Name);
+            foreach(var key in keys){var m=c.Measurements.FirstOrDefault(m=>m.Name==key);if(m!=null)p.SummaryRow(key,m.Value);}
+            p.Gap(12);
+        }
+        p.Paragraph("Reading key: MEASURED = Windows, firmware or drive reported. ESTIMATED = a calculation or stated heuristic. UNAVAILABLE = not verified. MANUAL = entered by the operator. A detected component is not proof of functional condition.",9,true);
+        p.NewPage(); p.Heading("01 / Hardware register");
         foreach (var c in i.Components)
         {
-            p.Ensure(120); p.Kicker(c.Category); p.Heading(c.Name);
+            p.Context = c.Category + " / " + c.Name;
+            p.Ensure(Math.Min(420,130+c.Measurements.Count*28)); p.Kicker(c.Category); p.Heading(c.Name);
             p.Status(c.Rating); p.Paragraph(c.Explanation);
             foreach (var m in c.Measurements) p.Row(m.Name, m.Value, m.Evidence + " | " + m.Source);
             foreach (var recommendation in c.Recommendations) p.Paragraph("Recommendation: " + recommendation, 9, true);
             p.Gap(14);
         }
-        p.NewPage(); p.Heading("Hardware warnings");
+        p.Context = null;
+        p.NewPage(); p.Heading("02 / Findings requiring attention");
         var warnings = i.Components.Where(c => c.Rating is Rating.Caution or Rating.Critical).ToList();
         if (warnings.Count == 0) p.Paragraph("No component warnings detected in available data. Unknown measurements remain unverified.");
         foreach (var c in warnings) p.Callout(c.Category + ": " + Evaluation.Label(c.Rating) + " - " + c.Explanation, c.Rating);
         foreach (var c in i.ManualChecks.Where(c => c.Outcome == ManualOutcome.Fail)) p.Callout("Manual check failed: " + c.Name, Rating.Critical);
-        p.Heading("Guided manual tests");
+        p.Heading("03 / Operator checks");
         p.Paragraph("Operator-entered results. Not automated measurements. Notes are excluded by default; this export " + (includeNotes ? "includes notes." : "excludes notes."), 9, true);
         foreach (var check in i.ManualChecks)
         {
@@ -102,7 +107,7 @@ public static class ReportWriter
             p.Paragraph(check.Instructions, 9);
             if (!string.IsNullOrEmpty(check.Notes)) p.Paragraph("Operator note: " + check.Notes, 9, true);
         }
-        p.Heading("Upgrade & service recommendations");
+        p.Heading("04 / Service & upgrade notes");
         foreach (var r in i.Components.SelectMany(c => c.Recommendations).Distinct()) p.Paragraph("- " + r, 10);
         p.Heading("Buying suitability & final recommendation"); p.Callout(i.Assessment, i.Overall);
         p.Paragraph("Verify your workload, physical condition, unplugged runtime, ownership and warranty independently. Resolve warnings before a buying decision. No resale price or reliability guarantee is provided.");
@@ -115,13 +120,14 @@ public static class ReportWriter
 
 internal sealed class PdfLayout : IDisposable
 {
+    public string? Context { get; set; }
     private readonly PdfDocument doc = new();
     private PdfPage page = null!;
     private XGraphics graphics = null!;
     private double y;
     private readonly bool sample;
     private readonly XColor ink = XColor.FromArgb(22, 40, 60);
-    private readonly XColor teal = XColor.FromArgb(8, 127, 121);
+    private readonly XColor teal = XColor.FromArgb(153, 106, 34);
     private const double Left = 44, Width = 507, Bottom = 756;
     private static XFont Font(double size, bool bold = false) => new("Segoe UI", size, bold ? XFontStyleEx.Bold : XFontStyleEx.Regular);
     public PdfLayout(bool sample)
@@ -136,10 +142,11 @@ internal sealed class PdfLayout : IDisposable
     {
         graphics?.Dispose(); page = doc.AddPage(); page.Size = PdfSharp.PageSize.A4;
         graphics = XGraphics.FromPdfPage(page);
-        graphics.DrawRectangle(new XSolidBrush(teal), 0, 0, page.Width.Point, 8);
-        Text("ATIQ-SOFTWARES", Left, 28, Font(9, true), teal);
+        graphics.DrawRectangle(new XSolidBrush(teal), 0, 0, page.Width.Point, 4);
+        Text("ATIQ-SOFTWARES / INSPECTION REGISTER", Left, 26, Font(8, true), ink);
         Text(sample ? "SAMPLE / SYNTHETIC DATA" : "LAPTOP INSPECTION REPORT", 337, 28, Font(8), ink);
         y = 58;
+        if(Context != null){Text(Context.Length > 102 ? Context[..99]+"..." : Context,Left,44,Font(7),XColor.FromArgb(90,104,111));y=68;}
     }
     public void Ensure(double height) { if (y + height > Bottom) NewPage(); }
     public void Gap(double points) { y += points; }
@@ -179,20 +186,45 @@ internal sealed class PdfLayout : IDisposable
         }
         y += 79;
     }
+    public void Cover(Inspection i)
+    {
+        var navy=XColor.FromArgb(24,35,43);var paper=XColor.FromArgb(244,242,235);var gold=XColor.FromArgb(229,186,105);
+        graphics.DrawRectangle(new XSolidBrush(navy),0,0,page.Width.Point,272);
+        graphics.DrawRectangle(new XSolidBrush(gold),Left,40,30,4);
+        Text("ATIQ-SOFTWARES",Left,64,Font(12,true),gold);
+        Text("LAPTOP INSPECTION",Left,99,Font(28,true),XColors.White);
+        Text("REPORT",Left,134,Font(28,true),XColors.White);
+        Text("Hardware Diagnostics & Condition Assessment",Left,181,Font(10),XColor.FromArgb(188,201,207));
+        Text("FILE  /  ALI-"+i.StartedAt.ToString("yyyyMMdd-HHmmss"),Left,226,Font(9,true),gold);
+        y=292;
+        Kicker(i.IsSample ? "SYNTHETIC SPECIMEN / NOT A REAL LAPTOP INSPECTION" : "DEVICE IDENTIFICATION");
+        Heading(i.Manufacturer+" / "+i.Model);
+        SummaryRow("Inspection started",i.StartedAt.ToString("yyyy-MM-dd HH:mm:ss zzz",CultureInfo.InvariantCulture));
+        SummaryRow("Inspection completed",i.CompletedAt?.ToString("yyyy-MM-dd HH:mm:ss zzz",CultureInfo.InvariantCulture)??"Not completed");
+        SummaryRow("Software", "Atiq Laptop Inspector / " + i.ApplicationVersion);
+        SummaryRow("Operator checks",i.ManualChecks.Count(c=>c.Outcome!=ManualOutcome.NotTested)+" recorded / "+i.ManualChecks.Count+" total");
+        Gap(16);Paragraph(Branding.Disclaimer,9,true);NewPage();
+    }
+    public void SummaryRow(string label,string value)
+    {
+        var labels=Wrap(label,Font(9),145);var values=Wrap(value,Font(10,true),345);double height=Math.Max(labels.Count*13,values.Count*14)+14;Ensure(height);
+        double yy=y+7;foreach(var line in labels){Text(line,Left,yy,Font(9),XColor.FromArgb(90,104,111));yy+=13;}
+        yy=y+7;foreach(var line in values){Text(line,Left+155,yy,Font(10,true),ink);yy+=14;}
+        y+=height;graphics.DrawLine(new XPen(XColor.FromArgb(218,222,220),.5),Left,y,Left+Width,y);
+    }
     public void Row(string label, string value, string evidence)
     {
-        var labels = Wrap(label, Font(9, true), 130);
-        var values = Wrap(value, Font(10), 350);
-        var sources = Wrap(evidence, Font(8), 350);
-        double height = Math.Max(labels.Count * 14, values.Count * 15 + sources.Count * 11 + 5) + 16;
+        var labels = Wrap(label, Font(9,true), 130);
+        var values = Wrap(value, Font(9), 185);
+        var sources = Wrap(evidence, Font(7), 163);
+        double height=Math.Max(Math.Max(labels.Count*12,values.Count*12),sources.Count*10)+16;
         Ensure(height);
-        graphics.DrawLine(new XPen(XColor.FromArgb(220, 229, 237), .5), Left, y, Left + Width, y);
-        double ly = y + 8, vy = ly;
-        foreach (var line in labels) { Text(line, Left + 5, ly, Font(9, true), ink); ly += 14; }
-        foreach (var line in values) { Text(line, Left + 148, vy, Font(10), ink); vy += 15; }
-        vy += 3;
-        foreach (var line in sources) { Text(line, Left + 148, vy, Font(8), XColor.FromArgb(83, 101, 121)); vy += 11; }
-        y += height;
+        graphics.DrawLine(new XPen(XColor.FromArgb(218,222,220),.5),Left,y,Left+Width,y);
+        double ly=y+8,vy=ly,sy=ly;
+        foreach(var line in labels){Text(line,Left+3,ly,Font(9,true),ink);ly+=12;}
+        foreach(var line in values){Text(line,Left+145,vy,Font(9),ink);vy+=12;}
+        foreach(var line in sources){Text(line,Left+342,sy,Font(7),XColor.FromArgb(90,104,111));sy+=10;}
+        y+=height;
     }
     private List<string> Wrap(string text, XFont font, double width)
     {

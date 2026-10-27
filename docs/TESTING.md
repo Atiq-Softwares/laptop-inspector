@@ -1,8 +1,10 @@
 # Validation record
 
-## Automated checks
+## Automated checks / v1.1
 
-The release test suite contains **44 passing test cases** covering:
+New cases validate SMBIOS populated/empty/unknown devices, truncated tables, extended size/speed fields, part-number extraction without serial export, configured versus rated MT/s, estimated MHz, independent charge percentage, partial ATA identity, NVMe unit conversion, absent counters and private drive-index filtering.
+
+The release test suite contains **64 passing test cases** covering:
 
 - Battery capacity ratios, missing/zero/invalid readings and policy boundaries.
 - Storage provider warnings, SMART failure precedence and wear thresholds.
@@ -22,7 +24,7 @@ results and package artifacts for each Windows run.
 ## Local validation performed
 
 - Compiled the solution on Windows with the .NET 10 SDK.
-- Ran the 44 test cases successfully.
+- Ran the 64 test cases successfully.
 - Launched the real WPF application and completed a real local Windows-provider
   hardware scan; no real hardware report or screenshot is published.
 - Rendered and visually reviewed all six pages of the synthetic sample PDF.
@@ -55,3 +57,14 @@ The workflow builds from the checked-out source, runs the tests, generates repor
 and validates the ZIP before publishing a tagged release.
 
 Copyright © 2026 Atiq-Softwares. Developed by Atiq-Softwares.
+
+## v1.1 local verification
+
+The expanded collector completed on the available Windows machine, identified
+both populated memory devices, and returned actual SSD powered-on hours, cycles,
+temperature and wear. Battery design/full/remaining capacity and charge now were
+present. These observations validate the implemented read path on this machine,
+not every laptop model. Real machine exports remain local and are not published.
+The UI and report redesign use explicitly synthetic specimens for public samples.
+
+The v1.1 package script also validates the pinned SMART engine/database hashes and a same-user, one-shot named-pipe diagnostic transaction without elevation. The interactive UAC approval itself has not been automated or bypassed. The nine-page synthetic PDF was rendered and visually reviewed.

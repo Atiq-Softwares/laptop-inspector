@@ -5,6 +5,7 @@ namespace Inspector.Core;
 
 public static class Evaluation
 {
+    public static double? BatteryCharge(double? remaining, double? full) => remaining is >= 0 && full is > 0 && double.IsFinite(remaining.Value) && double.IsFinite(full.Value) && remaining <= full * 1.2 ? Math.Round(remaining.Value / full.Value * 100, 1) : null;
     // These are practical inspection policies, not manufacturer failure predictions.
     public static double? BatteryHealth(double? design, double? full)
         => design is > 0 && full is > 0 && double.IsFinite(design.Value) && double.IsFinite(full.Value) && full / design <= 1.2 ? Math.Round(full.Value / design.Value * 100, 1) : null;

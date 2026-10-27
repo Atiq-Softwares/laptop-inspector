@@ -1,14 +1,16 @@
-Atiq Laptop Inspector is a portable, local Windows x64 hardware inspection app.
+Atiq Laptop Inspector v1.1 adds a redesigned inspection desk and substantially deeper hardware evidence.
 
-Download **Atiq-Laptop-Inspector-v1.0-Windows-x64.zip**, extract every file and double-click **Atiq-Laptop-Inspector.exe**. No .NET installation, account, internet connection or administrator access is required for normal use.
+Download **Atiq-Laptop-Inspector-v1.1-Windows-x64.zip**, extract every file and run **Atiq-Laptop-Inspector.exe**. Keep the third-party and licences folders beside it.
 
-Features: hardware inventory and available health counters; evidence-labelled assessments; dark/light dashboard; guided manual checks; keyboard and solid-color display checkers; branded PDF, HTML and JSON exports.
+- Battery: design, full-charge and remaining capacity; charge now, retention, wear, cycles, voltage and charging state.
+- RAM: per-slot firmware inventory, explicit empty slots, module parts, capacities, DDR type, configured/rated MT/s, estimated clock MHz, ranks, voltage and widths.
+- Storage: read-only smartctl plus Windows counters for actual operating hours, cycles, temperature, wear, SMART status and available ATA/NVMe details. Filesystem use is reported separately.
+- Searchable/filterable hardware register, paper/graphite/brass interface, and a redesigned branded PDF with a specification summary and compact evidence tables.
+- Optional advanced drive access requests Windows permission only after the operator chooses it. No automatic stress tests, service installation or security bypass.
 
-**The sample PDF/HTML/JSON use synthetic data.** They are examples of report formatting, not physical-hardware test results. Windows provider coverage varies. Unsupported SMART, battery and temperature values remain unverified. No stress tests or reliability guarantees.
+Sample reports contain synthetic data. Readings depend on firmware/controller access; support for every reading on every model cannot be guaranteed. The application is unsigned.
 
-The application is unsigned. Windows security or organizational policy may warn or block it. Do not disable protection or bypass a security block. Compare the ZIP's SHA-256 with **SHA256SUMS.txt**.
+Original application code: MIT. The separate smartctl executable is GPL-2.0-or-later, with its unmodified source, licence and build instructions included. All other notices are included.
 
 Copyright © 2026 Atiq-Softwares. Developed by Atiq-Softwares.
 GitHub: https://github.com/Atiq-Softwares
-
-Original code: MIT. Full dependency licenses accompany the EXE.

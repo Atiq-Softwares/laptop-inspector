@@ -1,4 +1,4 @@
-ATIQ-SOFTWARES / LAPTOP INSPECTOR 1.0
+ATIQ-SOFTWARES / LAPTOP INSPECTOR 1.1
 
 1. Extract the entire ZIP to a normal local folder.
 2. Double-click Atiq-Laptop-Inspector.exe.
@@ -7,7 +7,7 @@ ATIQ-SOFTWARES / LAPTOP INSPECTOR 1.0
 5. Open Export reports and save PDF, HTML or JSON.
 
 No installation, administrator access, account or internet is required.
-Keep this README, LICENSE, THIRD-PARTY-NOTICES.txt and the licenses folder with
+Keep this README, LICENSE, THIRD-PARTY-NOTICES.txt and the licenses and third-party folders with
 the EXE when redistributing it. The EXE includes the x64 .NET runtime.
 First start may extract native runtime files to Windows' temporary directory.
 
@@ -34,3 +34,7 @@ Copyright © 2026 Atiq-Softwares.
 Developed by Atiq-Softwares
 GitHub: https://github.com/Atiq-Softwares
 Original code: MIT License. See third-party notices for dependencies.
+
+For restricted SMART access, Advanced drive access explains an optional Windows
+administrator prompt. Standard inspection still works without elevation.
+The separate SMART reader is GPL licensed; its source and licence are bundled.

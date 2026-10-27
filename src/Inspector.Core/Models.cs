@@ -10,6 +10,8 @@ public enum ManualOutcome { NotTested, Pass, Fail, NotApplicable }
 public sealed record Measurement(string Name, string Value, Evidence Evidence, string Source);
 public sealed class Component
 {
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] public int? DiskIndex { get; set; }
+    [JsonIgnore(Condition = JsonIgnoreCondition.WhenWritingNull)] public long? CapacityBytes { get; set; }
     public string Category { get; set; } = "";
     public string Name { get; set; } = "";
     public Rating Rating { get; set; } = Rating.NotVerified;
@@ -36,7 +38,7 @@ public sealed class ManualCheck
 public sealed class Inspection
 {
     public string SchemaVersion { get; set; } = "1.0";
-    public string ApplicationVersion { get; set; } = "1.0.0";
+    public string ApplicationVersion { get; set; } = "1.1.0";
     public string Publisher { get; set; } = Branding.Publisher;
     public string Copyright { get; set; } = Branding.Copyright;
     public string GitHub { get; set; } = Branding.GitHub;

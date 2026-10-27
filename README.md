@@ -1,8 +1,8 @@
 <p align="center"><strong>ATIQ-SOFTWARES</strong></p>
 <h1 align="center">Atiq Laptop Inspector</h1>
-<p align="center">Know the hardware. Understand the warnings. Keep a clear report.</p>
+<p align="center">Portable Windows hardware inspection and evidence-based reports.</p>
 <p align="center">
-  <a href="https://github.com/Atiq-Softwares/laptop-inspector/releases/latest/download/Atiq-Laptop-Inspector-v1.0-Windows-x64.zip"><img alt="Download portable Windows x64 ZIP" src="https://img.shields.io/badge/DOWNLOAD-Windows_x64_ZIP-087f79?style=for-the-badge&logo=windows" /></a>
+  <a href="https://github.com/Atiq-Softwares/laptop-inspector/releases/latest/download/Atiq-Laptop-Inspector-v1.1-Windows-x64.zip"><img alt="Download portable Windows x64 ZIP" src="https://img.shields.io/badge/DOWNLOAD-Windows_x64_ZIP-996a22?style=for-the-badge&logo=windows" /></a>
   <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/License-MIT-16283c?style=for-the-badge" /></a>
 </p>
 
@@ -16,6 +16,14 @@ reports. Developed and published by **Atiq-Softwares**.
 
 > This screenshot and the downloadable sample reports contain clearly labelled
 > synthetic data. They are not measurements from a real laptop.
+
+## What changed in v1.1
+
+The interface uses an inspection-desk layout with a warm paper surface, graphite navigation and restrained brass accents. Device figures replace the earlier marketing-style overview. Battery and individual memory slots are visible together, followed by the drive register; the full hardware page can be filtered by category or searched by field/value.
+
+The PDF has a dark title page, a factual specification summary, compact evidence tables, component context on continued pages and numbered operator/service sections. The new bundled read-only SMART reader substantially improves drive hours and wear coverage without installing a service. Integrity checks protect the bundled executable and database. Restricted reads can be retried through an explicit optional Windows permission flow.
+
+A laptop brand/model does not guarantee that firmware, a controller or a USB bridge exposes every counter. Missing values remain unverified. The app never guesses an empty slot, drive hours or battery capacity.
 
 ## Get started
 
@@ -40,9 +48,9 @@ follow your organization's policy. Do not disable protection or bypass a block.
 | Area | Available information and honest limits |
 | --- | --- |
 | CPU | Model, manufacturer, cores, logical processors, reported clocks, L2/L3 cache; limited Intel generation inference and general-use suitability estimate. No benchmark. |
-| Memory | Installed capacity, module manufacturer/part, DDR type, configured/rated speed, form factor and firmware slot count. No inferred channel mode or integrity claim. |
-| Storage | Physical disk model, media, bus, capacity, provider health; matched operating hours, wear, temperature and uncorrected errors where exposed. Legacy ATA SMART records are explicitly unmapped and vendor-specific. |
-| Battery | Matched design/full-charge capacity, cycles if available, calculated capacity retention. Missing/invalid data stays unverified. |
+| Memory | Firmware-based per-slot inventory, including explicitly empty slots; manufacturer/part, DDR type, configured/rated MT/s, estimated DDR clock in MHz, ranks, voltage and widths. No inferred channel mode or integrity claim. |
+| Storage | Read-only smartctl plus Windows providers: model, firmware, interface, capacity, operating hours, power cycles, temperature, wear, SMART status, available NVMe counters and vendor-labelled ATA attributes. Separate logical-volume used/free space. |
+| Battery | Design/full-charge/remaining capacity, current charge, retained capacity, wear, cycles, voltage and charging state. Current charge and health are separate readings. |
 | Display & GPU | Graphics adapter, driver, current resolution/refresh if reported. Pixel and GPU functional tests remain manual. |
 | Board & BIOS | Manufacturer, board product/version and BIOS version/date. No firmware-security inference. |
 | Windows & security | OS version/build, architecture, last boot, Secure Boot, available TPM/Defender/encryption configuration. No malware or online update scan. |
@@ -84,6 +92,12 @@ the result is already a higher-priority warning or critical finding.
 - **JSON**: typed evidence, component evaluations, limitations, manual outcomes and
   the overall assessment for further processing.
 
+A sample memory-device page and battery readout:
+
+![Per-slot RAM specification page; synthetic data](docs/images/memory-report.png)
+
+![Battery capacity and charge page; synthetic data](docs/images/battery-report.png)
+
 All exports include the inspection timestamp with UTC offset, manufacturer/model,
 buying-suitability guidance and an explicit explanation of what remains unknown.
 Report files are not digitally signed and do not guarantee future reliability.
@@ -97,9 +111,7 @@ request during scanning/export, persistent agent or background service. GitHub l
 open only when clicked. The app reads Windows providers and does not change system
 settings, install drivers, flash firmware, erase data or run stress tests.
 
-No passwords, tokens, serial numbers, Windows product keys, usernames, computer
-names, IP/MAC addresses, SSIDs or personal files are collected. Matching device
-identifiers remain internal and are not exported. Manual notes are **excluded from
+No passwords, tokens, Windows product keys, account names, addresses, SSIDs or personal files are queried. Firmware and SMART buffers can contain hardware identifiers during collection; the parser keeps only selected fields and never exports serials. Drive indices remain internal and are removed from all report exports. Manual notes are **excluded from
 exports by default**; you may explicitly include them. Review free text before
 sharing any report. Exports remain on disk until you choose to remove or share them.
 
@@ -112,8 +124,8 @@ and the licenses folder with the EXE when redistributing the package.
 
 Physical hardware compatibility varies by firmware, drivers, Windows permissions,
 virtualization and USB/RAID bridges. Unsupported diagnostics remain explicitly
-unavailable. No elevation is requested. 32-bit and native ARM64 releases are not
-provided in v1.0. Use a Windows release receiving appropriate security updates.
+unavailable. An optional advanced-drive retry explains and requests Windows permission when standard SMART access is restricted. 32-bit and native ARM64 releases are not
+provided in v1.1. Use a Windows release receiving appropriate security updates.
 
 ## Verify your download
 
@@ -121,7 +133,7 @@ The release includes **SHA256SUMS.txt**. Compare the ZIP with a trusted local
 SHA-256 tool. Optional PowerShell verification for technical users:
 
 ```powershell
-Get-FileHash .\Atiq-Laptop-Inspector-v1.0-Windows-x64.zip -Algorithm SHA256
+Get-FileHash .\Atiq-Laptop-Inspector-v1.1-Windows-x64.zip -Algorithm SHA256
 ```
 
 ## Build and test from source
@@ -162,5 +174,5 @@ licenses/            Exact upstream legal notices for shipped dependencies
 **Developed by Atiq-Softwares**  
 **GitHub: https://github.com/Atiq-Softwares**
 
-Original code and graphics: [MIT License](LICENSE). Dependencies retain their
+Original code and graphics: [MIT License](LICENSE). The separate smartctl executable is GPL-2.0-or-later; its unmodified corresponding source archive, licence and build instructions are included in every portable package. Other dependencies retain their
 licenses; see [THIRD-PARTY-NOTICES.txt](THIRD-PARTY-NOTICES.txt) and `licenses/`.
