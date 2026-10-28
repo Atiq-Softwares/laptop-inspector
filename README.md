@@ -1,10 +1,16 @@
 <p align="center"><strong>ATIQ-SOFTWARES</strong></p>
 <h1 align="center">Atiq Laptop Inspector</h1>
 <p align="center">Portable Windows hardware inspection and evidence-based reports.</p>
+<h2 align="center"><a href="https://atiq-softwares.github.io/laptop-inspector/">Visit the website → Download the free Windows app</a></h2>
+<p align="center"><strong>100% Free • Offline • No Installation • No Registration</strong></p>
 <p align="center">
-  <a href="https://github.com/Atiq-Softwares/laptop-inspector/releases/latest/download/Atiq-Laptop-Inspector-v1.1.1-Windows-x64.zip"><img alt="Download portable Windows x64 ZIP" src="https://img.shields.io/badge/DOWNLOAD-Windows_x64_ZIP-996a22?style=for-the-badge&logo=windows" /></a>
+  <a href="https://atiq-softwares.github.io/laptop-inspector/"><img alt="Visit the official website and download the free Windows app" src="https://img.shields.io/badge/GET_THE_APP-Official_Website-996a22?style=for-the-badge&logo=windows" /></a>
   <a href="LICENSE"><img alt="MIT license" src="https://img.shields.io/badge/License-MIT-16283c?style=for-the-badge" /></a>
 </p>
+
+> **Looking for the application?** Start at **[the official download website](https://atiq-softwares.github.io/laptop-inspector/)** for the Windows ZIP, screenshots and simple instructions.
+> GitHub's **Code → Download ZIP** downloads the **source code**, not the ready-to-run application.
+> [Direct v1.1.1 Windows x64 application ZIP](https://github.com/Atiq-Softwares/laptop-inspector/releases/download/v1.1.1/Atiq-Laptop-Inspector-v1.1.1-Windows-x64.zip) · [Official releases](https://github.com/Atiq-Softwares/laptop-inspector/releases/latest)
 
 A native **C# / WPF** Windows hardware inspection application with an offline,
 portable EXE, evidence-labelled assessments and professional PDF, HTML and JSON
@@ -41,7 +47,7 @@ A laptop brand/model does not guarantee that firmware, a controller or a USB bri
 
 ## Get started
 
-1. [Download the latest Windows x64 ZIP](https://github.com/Atiq-Softwares/laptop-inspector/releases/latest).
+1. [Visit the official website](https://atiq-softwares.github.io/laptop-inspector/) and choose **Download Free for Windows**.
 2. Extract **all** files to a normal local folder.
 3. Double-click **`Atiq-Laptop-Inspector.exe`**.
 4. Click **Start Full Inspection** and wait for the scan to finish.
