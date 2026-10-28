@@ -6,7 +6,7 @@ $root = Split-Path -Parent $PSScriptRoot
 Push-Location $root
 try {
   function Invoke-DotNet { & $DotNet @args; if ($LASTEXITCODE -ne 0) { throw "dotnet failed with exit code $LASTEXITCODE" } }
-  Invoke-DotNet restore LaptopInspector.slnx --locked-mode
+  & (Join-Path $PSScriptRoot 'Restore-LockedDependencies.ps1') -DotNet $DotNet
   if (-not $SkipTests) { Invoke-DotNet test LaptopInspector.slnx -c Release --no-restore --logger 'trx;LogFileName=tests.trx' --results-directory artifacts/TestResults }
   $stage = Join-Path $root 'artifacts/portable'
   if (Test-Path -LiteralPath $stage) {

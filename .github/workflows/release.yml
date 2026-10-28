@@ -12,6 +12,8 @@ concurrency:
   cancel-in-progress: true
 jobs:
   windows:
+    # Keep this stable: main branch protection requires the exact check "windows".
+    name: windows
     runs-on: windows-2025
     timeout-minutes: 25
     steps:
@@ -23,7 +25,7 @@ jobs:
           global-json-file: global.json
       - name: Restore locked dependencies
         shell: pwsh
-        run: dotnet restore LaptopInspector.slnx --locked-mode
+        run: ./scripts/Restore-LockedDependencies.ps1
       - name: Check known dependency advisories
         shell: pwsh
         run: |
